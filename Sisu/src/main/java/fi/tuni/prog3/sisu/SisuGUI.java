@@ -1,6 +1,8 @@
 package fi.tuni.prog3.sisu;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -50,16 +52,16 @@ public class SisuGUI extends Application {
         grid.add(studentNrField, 1, 4, 2, 1);
         grid.setPrefWidth(350);
         
-        Label startYearLabel = new Label("Aloitusvuosi");
+        Label startYearLabel = new Label("Aloitusvuosi (vvvv)");
         grid.add(startYearLabel, 1, 5);
         TextField startYearField = new TextField();
         grid.add(startYearField, 1, 6);
-        Label finYearLabel = new Label("Valmistumisvuosi");
+        Label finYearLabel = new Label("Valmistumisvuosi (vvvv)");
         grid.add(finYearLabel, 2, 5);
         TextField finYearField = new TextField();
         grid.add(finYearField, 2, 6);
         
-        Label infoLabel = new Label("Syötä pakolliset tiedot (*)");
+        Label infoLabel = new Label("");
         grid.add(infoLabel, 1, 7);
         Button contButton = new Button("Jatka");
         contButton.setPrefWidth(SHORTFIELDWIDTH);
@@ -67,6 +69,46 @@ public class SisuGUI extends Application {
         
         stage.setScene(scene);
         stage.show();
+        
+        contButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                infoLabel.setText("");
+                if (studentNameField.getText().isBlank() | 
+                        studentNrField.getText().isBlank()) {
+                    infoLabel.setText("Syötä pakolliset tiedot (*)");
+                }
+                else if (startYearField.getText().isBlank() &
+                            finYearField.getText().isBlank()) {
+                    // Kutsu Sisu-rakentajalle (ilman vuositietoja)
+                    // Siirtyminen opintojen rakenne -näkymään
+                }
+                else {
+                    if (startYearField.getText().isBlank() | 
+                            !startYearField.getText().matches("\\d\\d\\d\\d")) {
+                        infoLabel.setText("Tarkista aloitusvuosi");
+                    }
+                    else {
+                        if (finYearField.getText().isBlank()) {
+                            // Kutsu Sisu-rakentajalle (ilman valmistumisvuotta)
+                            // Siirtyminen opintojen rakenne -näkymään
+                        }
+                        else {
+                            if (!finYearField.getText().matches("\\d\\d\\d\\d")) {
+                                infoLabel.setText("Tarkista valmistumisvuosi");
+                            }
+                            else if (Integer.parseInt(finYearField.getText()) 
+                                 < Integer.parseInt(startYearField.getText())) {
+                                infoLabel.setText("Tarkista valmistumisvuosi");
+                            }
+                            else {
+                                // Kutsu Sisu-rakentajalle
+                                // Siirtyminen opintojen rakenne -näkymään
+                            }
+                        }
+                    }
+                }    
+            } 
+        });
     }
-    
 }
