@@ -17,7 +17,6 @@ public class Sisu extends Application {
         var scene = new Scene(new StackPane(label), 640, 480);
         stage.setScene(scene);
         stage.show();
-        //TESTIIIIIII
     }
 
     public static void main(String[] args) {
