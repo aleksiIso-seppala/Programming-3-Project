@@ -41,8 +41,7 @@ import javafx.stage.Stage;
  * @author Lauri Puoskari
  */
 public class SisuGUI extends Application {
-    
-    //private final static int SPACING = 10;
+
     private final static int VGAP = 10;
     private final static int HGAP = 30;
     private final static int SHORT_FIELD_WIDTH = 150;
@@ -52,9 +51,10 @@ public class SisuGUI extends Application {
     private final static int STUDY_VIEW_WINDOW_WIDTH = 800;
     private final static int STUDY_VIEW_WINDOW_HEIGHT = 650;
     private final static int STUDY_VIEW_WINDOW_X = 250;
-    private final static int STUDY_VIEW_WINDOW_Y = 20;
+    private final static int STUDY_VIEW_WINDOW_Y = 0;
     private final static int COURSE_LIST_HEIGHT = 400;
     private final static int COMPLETED_LIST_HEIGHT = 435;
+    private static Sisu activeSisu;
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -91,15 +91,15 @@ public class SisuGUI extends Application {
         
         Label infoLabel = new Label("");
         grid.add(infoLabel, 1, 7);
-        Button contButton = new Button("Jatka");
-        contButton.setPrefWidth(SHORT_FIELD_WIDTH);
-        grid.add(contButton, 2, 7);
+        Button continueButton = new Button("Jatka");
+        continueButton.setPrefWidth(SHORT_FIELD_WIDTH);
+        grid.add(continueButton, 2, 7);
         
         stage.setScene(scene);
         stage.show();
         
         
-        contButton.setOnAction(new EventHandler<ActionEvent>() {
+        continueButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 infoLabel.setText("");
@@ -109,7 +109,8 @@ public class SisuGUI extends Application {
                 }
                 else if (startYearField.getText().isBlank() &
                             finYearField.getText().isBlank()) {
-                    // Kutsu Sisu-rakentajalle (ilman valmistumisvuotta)
+                    activeSisu = new Sisu(studentNameField.getText(), 
+                                            studentNrField.getText());
                     startStudyView(scene, tabPane);
                 }
                 else {
@@ -119,7 +120,9 @@ public class SisuGUI extends Application {
                     }
                     else {
                         if (finYearField.getText().isBlank()) {
-                            // Kutsu Sisu-rakentajalle (ilman valmistumisvuotta)
+                            activeSisu = new Sisu(studentNameField.getText(), 
+                                            studentNrField.getText(), 
+                                            startYearField.getText());
                             startStudyView(scene, tabPane);
                         }
                         else {
@@ -131,7 +134,10 @@ public class SisuGUI extends Application {
                                 infoLabel.setText("Tarkista valmistumisvuosi");
                             }
                             else {
-                                // Kutsu Sisu-rakentajalle
+                                activeSisu = new Sisu(studentNameField.getText(), 
+                                            studentNrField.getText(), 
+                                            startYearField.getText(),
+                                            finYearField.getText());
                                 startStudyView(scene, tabPane);
                             }
                         }
@@ -143,6 +149,9 @@ public class SisuGUI extends Application {
     
     public void startStudyView(Scene scene, TabPane tabPane)
     {
+        double studyViewWindowX = scene.getWindow().getX() - 
+                (STUDY_VIEW_WINDOW_WIDTH  - INFO_WINDOW_WIDTH) / 2;
+        
         Tab studyViewTab = new Tab("Opintojen rakenne");
         tabPane.getTabs().add(studyViewTab);
         tabPane.getSelectionModel().select(studyViewTab);
@@ -160,9 +169,8 @@ public class SisuGUI extends Application {
         Label fieldLabel = new Label("Valitse opintosuunta");
         studyViewGrid.add(fieldLabel, 2, 2);
         
-        // Placeholder-koodi tutkinto-ohjelmia varten
-        ObservableList<String> degrees = FXCollections.observableArrayList(
-        "Tekniikan kandidaattitutkinto", "Tutkinto-ohjelma 2", "Tutkinto-ohjelma 3");
+        // TODO: Lisää kutsu Sisu-luokan getDegrees-metodille.
+        ObservableList<Degree> degrees = FXCollections.observableArrayList();
         
         ChoiceBox degreeChoiceBox = new ChoiceBox(degrees);
         degreeChoiceBox.setPrefWidth(SHORT_FIELD_WIDTH);
@@ -185,7 +193,7 @@ public class SisuGUI extends Application {
         completionsTitle.setPrefWidth(SHORT_FIELD_WIDTH);
         studyViewGrid.add(completionsTitle, 4, 2, 1, 1);
         
-        ListView completionsCblc = new ListView(initCourseCheckBoxes());
+        ListView completionsCblc = new ListView(/*initCourseCheckBoxes()*/);
         completionsCblc.setPrefSize(LONG_FIELD_WIDTH, COMPLETED_LIST_HEIGHT);
         studyViewGrid.add(completionsCblc, 4, 3, 2, 2);
         
@@ -196,23 +204,24 @@ public class SisuGUI extends Application {
         studyViewTab.setContent(studyViewGrid);
         scene.getWindow().setWidth(STUDY_VIEW_WINDOW_WIDTH);
         scene.getWindow().setHeight(STUDY_VIEW_WINDOW_HEIGHT);
-        scene.getWindow().setX(STUDY_VIEW_WINDOW_X);
+        scene.getWindow().setX(studyViewWindowX);
         scene.getWindow().setY(STUDY_VIEW_WINDOW_Y);
+        
         
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 // TODO: Vahvista valinnat ja anna ne Sisu-luokalle.
+                
+//                activeSisu.getStudent().setDegree();
+//                activeSisu.getStudent().setStudyField();
             }
         });
         
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                
-                // TODO: Tallennuskutsu Sisu-luokalle
-                boolean isSuccesfullySaved = true;
-                
+                boolean isSuccesfullySaved = activeSisu.saveStudentData();
                 Dialog saveDialog = new Dialog();
                 saveDialog.setTitle("HUOM!");
                 DialogPane dialogPane = new DialogPane();
@@ -242,17 +251,12 @@ public class SisuGUI extends Application {
     }
     
     public ObservableList<CheckBox> initCourseCheckBoxes() {
-        ObservableList<CheckBox> checkBoxes = FXCollections.observableArrayList();
-        
-        // Placeholder-koodi kurssinäkymää varten
-        ArrayList<String> courses = new ArrayList<>();
-        courses.add("Kurssi 1");
-        courses.add("Kurssi 2");
-        courses.add("Kurssi 3");
-        
-        for (var course : courses)
-        {
-            CheckBox checkBox = new CheckBox(course);
+        ObservableList<CheckBox> checkBoxes = FXCollections
+                                                        .observableArrayList();
+        ArrayList<Course> courses = activeSisu.getActiveStudent().getActiveDegree()
+                                                        .getCourses();
+        for (var course : courses) {
+            CheckBox checkBox = new CheckBox(course.toString());
             checkBoxes.add(checkBox);
         }
         return checkBoxes;
