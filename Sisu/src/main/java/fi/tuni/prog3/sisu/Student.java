@@ -17,13 +17,13 @@ public class Student {
     private String finishingYear = null;
     private TreeMap<Course, Integer> completions;
     private Degree activeDegree;
-    private StudyField activeStudyField;
+    private Module activeStudyField;
     
     public Student(String name,
             String studentNr,
             TreeMap<Course, Integer> completions,
             Degree activeDegree,
-            StudyField activeStudyField ) {
+            Module activeStudyField ) {
         
         this.name = name;
         this.studentNr = studentNr;
@@ -37,7 +37,7 @@ public class Student {
             String studentNr,
             TreeMap<Course, Integer> completions,
             Degree activeDegree,
-            StudyField activeStudyField,
+            Module activeStudyField,
             String startingYear,
             String finishingYear ) {
         
@@ -67,7 +67,7 @@ public class Student {
         return this.activeDegree;
     }
     
-    public StudyField getActiveStudyField() {
+    public Module getActiveStudyField() {
         return this.activeStudyField;
     }
     

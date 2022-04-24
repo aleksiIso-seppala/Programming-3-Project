@@ -8,14 +8,14 @@ import java.util.ArrayList;
  * @author Lauri Kalliojärvi
  */
 
-public class StudyField {
+public class Module {
 
     private ArrayList<Course> courses;
     private Degree degree;
     private String name;
     private String id;
     
-    public StudyField(ArrayList<Course> courses,
+    public Module(ArrayList<Course> courses,
             Degree degree,
             String name,
             String id ) {
@@ -41,6 +41,10 @@ public class StudyField {
     
     public String getId() {
         return this.id;
+    }
+    
+    public void setDegree(Degree degreeToSet) {
+        this.degree = degreeToSet;
     }
     
 }

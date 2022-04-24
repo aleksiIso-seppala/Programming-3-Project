@@ -9,13 +9,13 @@ import java.util.ArrayList;
  */
 public class Degree {
 
-   private ArrayList<StudyField> studyFields;
+   private ArrayList<Module> studyFields;
    private ArrayList<Course> courses;
    private int studyPoints;
    private String name;
    private String id;
    
-   public Degree(ArrayList<StudyField> studyFields,
+   public Degree(ArrayList<Module> studyFields,
            ArrayList<Course> courses,
            int studyPoints,
            String name,
@@ -29,7 +29,7 @@ public class Degree {
        
    }
    
-   public ArrayList<StudyField> getStudyFields() {
+   public ArrayList<Module> getStudyFields() {
        return this.studyFields;
    }
    
