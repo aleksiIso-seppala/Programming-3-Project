@@ -15,9 +15,7 @@ public class Degree {
    private String name;
    private String id;
    
-   public Degree(ArrayList<StudyField> studyFields,
-           ArrayList<Module> modules,
-           ArrayList<Course> courses,
+   public Degree(
            int studyPoints,
            String name,
            String id ) {  
