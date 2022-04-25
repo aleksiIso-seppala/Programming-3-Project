@@ -10,16 +10,16 @@ import java.io.*;
 import java.nio.charset.*;
 import java.util.ArrayList;
 import com.google.gson.*;
-
+import java.util.TreeMap;
 /**
  *
  * @author aleks
  */
 public class JSONHandler {
 
-    public static ArrayList<Degree> readDegrees() throws MalformedURLException, IOException{
+    public static TreeMap<String, Degree> readDegrees() throws MalformedURLException, IOException{
         
-        ArrayList<Degree> degrees = new ArrayList<>();
+        TreeMap<String, Degree> degrees = new TreeMap<>();
         
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/module-search?"
                 + "curriculumPeriodId=uta-lvv-2021&universityId=tuni-university"
@@ -37,17 +37,21 @@ public class JSONHandler {
         for(var object : degreesJson){
             JsonObject degree = (JsonObject) object;
             String groupId = degree.get("groupId").getAsString();
-            String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
-                    + "by-group-id?groupId=" + groupId + 
-                    "&universityId=tuni-university-root-id";
-            readDegree(mUrl);
+            String name = degree.get("name").getAsString();
+            Degree degreeClass = readDegree(groupId);
+            degrees.put(name, degreeClass);
         }
+
         return degrees;
     }
     
-    public static void readDegree(String sUrl) throws MalformedURLException, IOException{
-       
-        URL url = new URL(sUrl);
+    public static Degree readDegree(String groupId) throws MalformedURLException, IOException{
+
+        String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
+        + "by-group-id?groupId=" + groupId + 
+        "&universityId=tuni-university-root-id";
+        
+        URL url = new URL(mUrl);
         BufferedReader input = new BufferedReader(
             new InputStreamReader(url.openStream()));
         Gson gson = new Gson();
@@ -68,8 +72,10 @@ public class JSONHandler {
             else{
                 name = nameObject.get("fi").toString();               
             }
+            var creditsO = degree.getAsJsonObject("targetCredits");
+            int credits = creditsO.get("min").getAsInt();
             
-            Degree degreeObject = new Degree();
+            Degree degreeObject = new Degree(credits, name, groupId);
             
             JsonObject rules = degree.getAsJsonObject("rule");
             var innerRule = rules.getAsJsonArray("rules");
@@ -77,16 +83,17 @@ public class JSONHandler {
                 var tempRule = rules.getAsJsonObject("rule");
                 innerRule = tempRule.getAsJsonArray("rules");
             }
+            //tämä käy moduulit läpi, jätetään myöhemmälle
             for(var rule : innerRule){
                 JsonObject object1 = rule.getAsJsonObject();
                 if(object1.get("type").getAsString().equals("ModuleRule")){
-                    String groupId = object1.get("moduleGroupId").getAsString();
-                    readModule(groupId);
+                    String moduleId = object1.get("moduleGroupId").getAsString();
+//                    readModule(moduleId);
                 }
             }
-            return ; 
+            return degreeObject; 
         }
-
+        return null;
     } 
     
     public static void readModule(String groupId) throws MalformedURLException, IOException{
