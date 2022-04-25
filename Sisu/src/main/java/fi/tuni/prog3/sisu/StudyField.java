@@ -41,4 +41,9 @@ public class StudyField {
         this.degree = degreeToSet;
     }
     
+    @Override
+    public String toString() {
+        return this.name;
+    }
+    
 }

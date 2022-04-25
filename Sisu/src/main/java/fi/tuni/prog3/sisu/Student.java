@@ -78,4 +78,9 @@ public class Student {
     public void setActiveStudyField(StudyField newActiveStudyField) {
         this.activeStudyField = newActiveStudyField;
     }
+    
+    @Override
+    public String toString() {
+        return this.studentName;
+    }
 }

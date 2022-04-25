@@ -47,4 +47,8 @@ public class Module {
         this.degree = degreeToSet;
     }
     
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

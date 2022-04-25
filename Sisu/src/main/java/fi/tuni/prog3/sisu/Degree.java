@@ -53,4 +53,8 @@ public class Degree {
        return this.id;
    }
    
+   @Override
+    public String toString() {
+        return this.name;
+    }
 }
