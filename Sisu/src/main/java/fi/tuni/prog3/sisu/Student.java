@@ -79,6 +79,14 @@ public class Student {
         this.activeStudyField = newActiveStudyField;
     }
     
+    public void completeCourse(Course completedCourse) {
+        this.completions.put(completedCourse,completedCourse.getStudyPoints());
+    }
+    
+    public void removeCourse(Course removedCourse) {
+        this.completions.remove(removedCourse);
+    }
+    
     @Override
     public String toString() {
         return this.studentName;
