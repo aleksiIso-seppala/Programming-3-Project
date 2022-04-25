@@ -11,7 +11,7 @@ import java.util.TreeMap;
  */
 
 public class Student {
-    private String name;
+    private String studentName;
     private String studentNr;
     private String startingYear = null;
     private String finishingYear = null;
@@ -19,40 +19,28 @@ public class Student {
     private Degree activeDegree;
     private Module activeStudyField;
     
-    public Student(String name,
-            String studentNr,
-            TreeMap<Course, Integer> completions,
-            Degree activeDegree,
-            Module activeStudyField ) {
-        
-        this.name = name;
-        this.studentNr = studentNr;
-        this.completions = completions;
-        this.activeDegree = activeDegree;
-        this.activeStudyField = activeStudyField;
-        
+    public Student(String studentName, String studentNr) {
+        this.studentName = studentName;
+        this.studentNr = studentNr; 
     }
     
-    public Student(String name,
-            String studentNr,
-            TreeMap<Course, Integer> completions,
-            Degree activeDegree,
-            Module activeStudyField,
-            String startingYear,
-            String finishingYear ) {
-        
-        this.name = name;
+    public Student(String studentName, String studentNr, String startingYear) {
+        this.studentName = studentName;
         this.studentNr = studentNr;
-        this.completions = completions;
-        this.activeDegree = activeDegree;
-        this.activeStudyField = activeStudyField;
+        this.startingYear = startingYear;
+    }
+    public Student(String studentName, 
+            String studentNr, 
+            String startingYear,
+            String finishingYear) {
+        this.studentName = studentName;
+        this.studentNr = studentNr;
         this.startingYear = startingYear;
         this.finishingYear = finishingYear;
-        
     }
     
-    public String getName() {
-        return this.name;
+    public String getStudentName() {
+        return this.studentName;
     }
     
     public String getStudentNr() {
@@ -78,5 +66,16 @@ public class Student {
     public String getFinishingYear() {
         return this.finishingYear;
     }
-     
+    
+    public void setCompletions(TreeMap<Course, Integer> newCompletions) {
+        this.completions = newCompletions;
+    }
+    
+    public void setActiveDegree(Degree newActiveDegree) {
+        this.activeDegree = newActiveDegree;
+    }
+    
+    public void setActiveStudyField(Module newActiveStudyField) {
+        this.activeStudyField = newActiveStudyField;
+    }
 }
