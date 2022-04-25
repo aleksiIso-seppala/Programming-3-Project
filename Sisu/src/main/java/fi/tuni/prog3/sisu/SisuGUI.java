@@ -2,7 +2,10 @@ package fi.tuni.prog3.sisu;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -109,9 +112,14 @@ public class SisuGUI extends Application {
                 }
                 else if (startYearField.getText().isBlank() &
                             finYearField.getText().isBlank()) {
-                    activeSisu = new Sisu(studentNameField.getText(), 
-                                            studentNrField.getText());
-                    startStudyView(scene, tabPane);
+                    try {
+                        activeSisu = new Sisu(studentNameField.getText(),
+                                studentNrField.getText());
+                        startStudyView(scene, tabPane);
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(
+                                Level.SEVERE, null, ex);
+                    }
                 }
                 else {
                     if (startYearField.getText().isBlank() | 
@@ -120,9 +128,14 @@ public class SisuGUI extends Application {
                     }
                     else {
                         if (finYearField.getText().isBlank()) {
-                            activeSisu = new Sisu(studentNameField.getText(), 
-                                            studentNrField.getText(), 
-                                            startYearField.getText());
+                            try {
+                                activeSisu = new Sisu(studentNameField.getText(),
+                                        studentNrField.getText(),
+                                        startYearField.getText());
+                            } catch (IOException ex) {
+                                Logger.getLogger(SisuGUI.class.getName()).log(
+                                        Level.SEVERE, null, ex);
+                            }
                             startStudyView(scene, tabPane);
                         }
                         else {
@@ -134,10 +147,15 @@ public class SisuGUI extends Application {
                                 infoLabel.setText("Tarkista valmistumisvuosi");
                             }
                             else {
-                                activeSisu = new Sisu(studentNameField.getText(), 
-                                            studentNrField.getText(), 
+                                try {
+                                    activeSisu = new Sisu(studentNameField.getText(), 
+                                            studentNrField.getText(),
                                             startYearField.getText(),
                                             finYearField.getText());
+                                } catch (IOException ex) {
+                                    Logger.getLogger(SisuGUI.class.getName()).
+                                            log(Level.SEVERE, null, ex);
+                                }
                                 startStudyView(scene, tabPane);
                             }
                         }
@@ -160,7 +178,8 @@ public class SisuGUI extends Application {
         studyViewGrid.setVgap(VGAP);
         studyViewGrid.setHgap(HGAP);
         
-        Label titleLabel = new Label("Opintojen rakenne - <nimi>");
+        Label titleLabel = new Label("Opintojen rakenne - " 
+                + activeSisu.getActiveStudent().getName());
         titleLabel.setFont(new Font(20));
         studyViewGrid.add(titleLabel, 1, 1, 5, 1);
         
@@ -168,9 +187,9 @@ public class SisuGUI extends Application {
         studyViewGrid.add(degreeLabel, 1, 2);
         Label fieldLabel = new Label("Valitse opintosuunta");
         studyViewGrid.add(fieldLabel, 2, 2);
-        
-        // TODO: Lisää kutsu Sisu-luokan getDegrees-metodille.
-        ObservableList<Degree> degrees = FXCollections.observableArrayList();
+
+        ObservableList<String> degrees = FXCollections.
+                observableArrayList(activeSisu.getDegrees());
         
         ChoiceBox degreeChoiceBox = new ChoiceBox(degrees);
         degreeChoiceBox.setPrefWidth(SHORT_FIELD_WIDTH);

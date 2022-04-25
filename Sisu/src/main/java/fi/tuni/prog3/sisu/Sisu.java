@@ -1,7 +1,9 @@
 package fi.tuni.prog3.sisu;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,22 +17,19 @@ import javafx.stage.Stage;
 
 public class Sisu {
     private Student activeStudent;
-    private ArrayList<Degree> degrees;
+    private TreeMap<String, Degree> degrees;
 
-    public Sisu(String studentName, String studentNr, String... years) {
+    public Sisu(String studentName, String studentNr, String... years) throws IOException {
         switch (years.length) {
             case 0:
-                //Luodaan uusi Student-olio ilman vuositietoja.
-                //activeStudent = Student(studentName, studentNr);
-                break; 
+                activeStudent = new Student(studentName, studentNr);
+                break;
             case 1:
-                //Luodaan uusi Student-olio ainoastaan aloitusvuositiedolla.
-                //activeStudent = Student(studentName, studentNr, years[0]);
+                activeStudent = new Student(studentName, studentNr, years[0]);
                 break;
             case 2:
-                //Luodaan uusi Student-olio ainoastaan molemmilla vuositiedoilla.
-                //activeStudent = Student(studentName, studentNr,
-                //                            years[0], years[1]);
+                activeStudent = new Student(studentName, studentNr,
+                                            years[0], years[1]);
                 break;
             default:
                 break;
@@ -41,14 +40,15 @@ public class Sisu {
         
         // TODO: Haetaan tiedot tutkinto-ohjelmista, luodaan ne ja talletetaan
         //       this.degrees
+        this.degrees = JSONHandler.readDegrees();
     }
     
     public Student getActiveStudent() {
         return this.activeStudent;
     }
     
-    public ArrayList<Degree> getDegrees() {
-        return this.degrees;
+    public ArrayList<String> getDegrees() {
+        return new ArrayList<>(this.degrees.keySet());
     }
     
     public boolean saveStudentData() /*throws FileNotFoundException*/ {
@@ -95,4 +95,5 @@ public class Sisu {
         courses1_3.add(course8);
         courses1_3.add(course9);*/
     }
+    
 }
