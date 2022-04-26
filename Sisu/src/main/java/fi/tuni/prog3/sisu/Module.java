@@ -11,20 +11,24 @@ import java.util.ArrayList;
 public class Module {
 
     private ArrayList<Course> courses;
+    private ArrayList<Module> modules;
     private Degree degree;
     private String name;
     private String id;
+    private int credits;
+    
     
     public Module(ArrayList<Course> courses,
-            Degree degree,
             String name,
-            String id ) {
+            String id, 
+            int credits) {
         
+        this.credits = credits;
         this.courses = courses;
         this.degree = degree;
         this.name = name;
         this.id = id;
-        
+        this.modules = new ArrayList<>();
     }
     
     public ArrayList<Course> getCourses() {
@@ -45,6 +49,14 @@ public class Module {
     
     public void setDegree(Degree degreeToSet) {
         this.degree = degreeToSet;
+    }
+    
+    public void addModule(Module module){
+        this.modules.add(module);
+    }
+    
+    public void addCourse(Course course){
+        this.courses.add(course);
     }
     
     @Override

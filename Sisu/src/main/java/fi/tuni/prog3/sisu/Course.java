@@ -16,7 +16,6 @@ public class Course {
     private String id;
     
     public Course(int studyPoints,
-            ArrayList<Degree> degrees,
             String name,
             String id ) {
         

@@ -13,14 +13,14 @@ import com.google.gson.*;
 import java.util.TreeMap;
 /**
  *
- * @author aleks
+ * @author Aleksi Iso-Seppälä
  */
 public class JSONHandler {
 
     public static TreeMap<String, Degree> readDegrees() throws MalformedURLException, IOException{
         
         TreeMap<String, Degree> degrees = new TreeMap<>();
-        
+
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/module-search?"
                 + "curriculumPeriodId=uta-lvv-2021&universityId=tuni-university"
                 + "-root-id&moduleType=DegreeProgramme&limit=1000";
@@ -55,9 +55,8 @@ public class JSONHandler {
         BufferedReader input = new BufferedReader(
             new InputStreamReader(url.openStream()));
         Gson gson = new Gson();
-        JsonArray response = gson.fromJson(input,JsonArray.class);
+        JsonArray response = gson.fromJson(input,JsonArray.class);        
         
-
         for(var object : response){
             JsonObject degree = (JsonObject) object;
             if(degree == null){
@@ -88,81 +87,104 @@ public class JSONHandler {
                 JsonObject object1 = rule.getAsJsonObject();
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
-//                    readModule(moduleId);
+                    //readModule(moduleId);
                 }
             }
             return degreeObject; 
         }
+        
         return null;
     } 
     
-    public static void readModule(String groupId) throws MalformedURLException, IOException{
+    public static Module readModule(String groupId) throws MalformedURLException, IOException{
         
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="
                 + groupId + "&universityId=tuni-university-root-id";
         URL url = new URL(sUrl);
         BufferedReader input = new BufferedReader (
                 new InputStreamReader(url.openStream()));
-        Gson gson = new Gson();
+        Gson gson = new Gson(); 
         JsonArray response = gson.fromJson(input, JsonArray.class);
         
         for (var object : response){
             
-            JsonObject module = (JsonObject) object;
-            var rules = module.getAsJsonObject("rule");
+            JsonObject moduleO = (JsonObject) object;
+            var rules = moduleO.getAsJsonObject("rule");
+            
+            int credits;
+            var creditsO = moduleO.getAsJsonObject("targetCredits");
+            if(creditsO != null){
+                credits = creditsO.get("min").getAsInt();               
+            }
+            else{
+                credits = -1;
+            }
+            String name = null;
+            var nameO = moduleO.getAsJsonObject("name");
+            if(nameO.get("fi") == null){
+                name = nameO.get("en").getAsString();
+            }
+            else{
+                name = nameO.get("fi").getAsString();
+            }
+
+            
+            ArrayList<Course> courses = new ArrayList<>();
+            Module module = new Module(courses, name, groupId, credits);
             
             while(rules.get("type").getAsString().equals("CreditsRule")){
                 rules = rules.getAsJsonObject("rule");
             }
             
-            var innerRules = rules.getAsJsonArray("rules");
-            for(var rule : innerRules){
-                JsonObject object1 = rule.getAsJsonObject();
-                if(object1.get("type").getAsString().equals("CompositeRule")){
-                    object1.getAsJsonArray("rules");
-                }
-                switch (object1.get("type").getAsString()) {
-                    case "ModuleRule":
-                        String moduleId = object1.get("moduleGroupId").getAsString();
-                        readModule(moduleId);
-                        break;
-                    case "CourseUnitRule":
-                        String courseId = object1.get("courseUnitGroupId").getAsString();
-                        readCourse(courseId);
-                        break;
-                    case "CompositeRule":
-                        var innerArray = object1.getAsJsonArray("rules");  
-                        for(var inner : innerArray){
-                            JsonObject innerO = inner.getAsJsonObject();
-                            if(innerO.get("type").getAsString().equals("CompositeRule")){
-                                var finalArray = innerO.getAsJsonArray("rules");
-                                
-                                for(var finalO : finalArray){
-                                    JsonObject objectfinal =  finalO.getAsJsonObject();
-                                    if(innerO.get("type").getAsString().equals("CompositeRule")){
-                                        var jaiwdj = objectfinal.getAsJsonArray("rules");
-                                        for(var awfda : jaiwdj){
-                                            var awfk = awfda.getAsJsonObject();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                    case "AnyCourseUnitRule":
-                        break;
-                    case "AnyModuleRule":
-                        break;
-                    default:
-                        System.out.println(groupId);
-                        break;
-                }
-            }
+            var innerArray = rules.getAsJsonArray("rules");
+            readArray(innerArray, module);
+            return module;
         }
-        
+        return null;
     }
     
-    public static void readCourse(String courseId) throws MalformedURLException, IOException{
+    public static void readArray(JsonArray array, Module module) throws IOException{
+        
+        for(JsonElement element : array){
+            if(element.isJsonArray()){
+                readArray(element.getAsJsonArray(), module);
+                continue;
+            }
+            
+            JsonObject object = element.getAsJsonObject();
+            switch (object.get("type").getAsString()) {
+                case "ModuleRule":
+                    String moduleId = object.get("moduleGroupId").getAsString();
+                    Module innerModule =  readModule(moduleId);
+                    module.addModule(innerModule);
+                    break;
+                case "CourseUnitRule":
+                    String courseId = object.get("courseUnitGroupId").getAsString();
+                    Course course = readCourse(courseId);
+                    module.addCourse(course);
+                    break;
+                case "CompositeRule":
+                    JsonArray innerArray = object.getAsJsonArray("rules");
+                    readArray(innerArray,module);
+                    break;
+                case "AnyCourseUnitRule":
+                    break;
+                case "AnyModuleRule":
+                    break;
+                case "CreditsRule":
+                    while(object.get("type").getAsString().equals("CreditsRule")){
+                        object = object.getAsJsonObject("rule");
+                    }
+                    innerArray = object.getAsJsonArray("rules");
+                    readArray(innerArray,module);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    public static Course readCourse(String courseId) throws MalformedURLException, IOException{
         
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="
                 + courseId + "&universityId=tuni-university-root-id";
@@ -172,10 +194,27 @@ public class JSONHandler {
         Gson gson = new Gson();
         JsonArray response = gson.fromJson(input, JsonArray.class);
         
-        for(var course : response){
-            JsonObject courseO = (JsonObject) course;
+        for(var data : response){
+            JsonObject courseO = (JsonObject) data;
             
+            var creditsO = courseO.getAsJsonObject("credits");
+            int credits = creditsO.get("min").getAsInt();
+            
+            var nameO = courseO.getAsJsonObject("name");
+            String name;          
+            
+            if(nameO.get("fi") == null){
+                name = nameO.get("en").getAsString();
+            }
+            else{
+                name = nameO.get("fi").getAsString();
+            }
+            
+            Course course = new Course(credits, name, courseId);
+            
+            return course;
         }
+        return null;
     }
     
     public static void writeStudentData(Student st) throws IOException {
@@ -196,7 +235,7 @@ public class JSONHandler {
     }
     
     public static void main(String args[]) throws IOException {
-        //readDegrees();
+        readDegrees();
         //Student st = new Student("Matti","007");
         //Student st2 = new Student("Maija","1");
         //writeStudentData(st);
