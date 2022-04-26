@@ -66,6 +66,7 @@ public class JSONHandler {
             String name;
             JsonObject nameObject = degree.getAsJsonObject("name");
             if(nameObject.get("fi") == null){
+                //name = degree.get("en").getAsString();
                 name = null;
             }
             else{
@@ -95,6 +96,61 @@ public class JSONHandler {
         
         return null;
     } 
+    
+    public static TreeMap<String, Module> readModules(Degree selectedDegree) throws 
+                                        MalformedURLException, IOException {
+        TreeMap<String, Module> modules = new TreeMap<>();
+        
+        String groupId = selectedDegree.getId();
+        
+        String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
+        + "by-group-id?groupId=" + groupId + 
+        "&universityId=tuni-university-root-id";
+        
+        URL url = new URL(mUrl);
+        BufferedReader input = new BufferedReader(
+            new InputStreamReader(url.openStream()));
+        Gson gson = new Gson();
+        JsonArray response = gson.fromJson(input,JsonArray.class);  
+        
+        for(var object : response) {
+            JsonObject degree = (JsonObject) object;
+            if(degree == null){
+                continue;
+            }
+            
+            String name;
+            JsonObject nameObject = degree.getAsJsonObject("name");
+            if(nameObject.get("fi") == null){
+                name = null;
+            }
+            else{
+                name = nameObject.get("fi").toString();               
+            }
+            
+            if (name != null) {
+                if (name.equals(selectedDegree.getName())) {
+                    JsonObject rules = degree.getAsJsonObject("rule");
+                    var innerRule = rules.getAsJsonArray("rules");
+                    if(innerRule == null){
+                        var tempRule = rules.getAsJsonObject("rule");
+                        innerRule = tempRule.getAsJsonArray("rules");
+                    }
+
+                    for(var rule : innerRule){
+                        JsonObject object1 = rule.getAsJsonObject();
+                        if(object1.get("type").getAsString().equals("ModuleRule")){
+                            String moduleId = object1.get("moduleGroupId").getAsString();
+                            Module module = readModule(moduleId);
+                            modules.put(module.getName(), module);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return modules;
+    }
     
     public static Module readModule(String groupId) throws MalformedURLException, IOException{
         

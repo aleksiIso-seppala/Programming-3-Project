@@ -30,6 +30,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -115,7 +117,7 @@ public class SisuGUI extends Application {
                     try {
                         activeSisu = new Sisu(studentNameField.getText(),
                                 studentNrField.getText());
-                        startStudyView(scene, tabPane);
+                        startStudyView(stage, scene, tabPane);
                     } catch (IOException ex) {
                         Logger.getLogger(SisuGUI.class.getName()).log(
                                 Level.SEVERE, null, ex);
@@ -136,7 +138,7 @@ public class SisuGUI extends Application {
                                 Logger.getLogger(SisuGUI.class.getName()).log(
                                         Level.SEVERE, null, ex);
                             }
-                            startStudyView(scene, tabPane);
+                            startStudyView(stage, scene, tabPane);
                         }
                         else {
                             if (!finYearField.getText().matches("\\d\\d\\d\\d")) {
@@ -156,7 +158,8 @@ public class SisuGUI extends Application {
                                     Logger.getLogger(SisuGUI.class.getName()).
                                             log(Level.SEVERE, null, ex);
                                 }
-                                startStudyView(scene, tabPane);
+                                startStudyView(stage, scene, tabPane);
+                                continueButton.setDisable(true);
                             }
                         }
                     }
@@ -165,8 +168,8 @@ public class SisuGUI extends Application {
         });
     }
     
-    public void startStudyView(Scene scene, TabPane tabPane)
-    {
+    public void startStudyView(Stage stage, Scene scene, TabPane tabPane)
+    {   
         double studyViewWindowX = scene.getWindow().getX() - 
                 (STUDY_VIEW_WINDOW_WIDTH  - INFO_WINDOW_WIDTH) / 2;
         
@@ -199,9 +202,9 @@ public class SisuGUI extends Application {
         fieldChoiceBox.setPrefWidth(SHORT_FIELD_WIDTH);
         studyViewGrid.add(fieldChoiceBox, 2, 3);
         
-        ListView courseListView = new ListView();
-        studyViewGrid.add(courseListView, 1, 4, 2, 1);
-        courseListView.setPrefHeight(COURSE_LIST_HEIGHT);
+        TreeView courseTreeView = new TreeView();
+        studyViewGrid.add(courseTreeView, 1, 4, 2, 1);
+        courseTreeView.setPrefHeight(COURSE_LIST_HEIGHT);
         
         Button confirmButton = new Button("Vahvista valinnat");
         confirmButton.setPrefWidth(SHORT_FIELD_WIDTH);
@@ -226,6 +229,40 @@ public class SisuGUI extends Application {
         scene.getWindow().setX(studyViewWindowX);
         scene.getWindow().setY(STUDY_VIEW_WINDOW_Y);
         
+        degreeChoiceBox.setOnHidden(new EventHandler<>(){
+            @Override
+            public void handle(Event t) {
+                if (courseTreeView.getRoot() != null) {
+                    if (!courseTreeView.getRoot().getChildren().isEmpty()) {
+                        for (int i = 0; i < courseTreeView.getRoot().
+                                                getChildren().size() ; i++) {
+                            courseTreeView.getRoot().getChildren().remove(i);
+                        }
+                    }
+                }
+                
+                TreeItem<String> root = new TreeItem<>("Root Node");
+                courseTreeView.setShowRoot(false);
+                courseTreeView.setRoot(root);
+                
+                if (degreeChoiceBox.getSelectionModel().getSelectedItem() != null) {
+                    String selectedDegree = (String) degreeChoiceBox.
+                                        getSelectionModel().getSelectedItem();
+                    activeSisu.setSelectedDegree(selectedDegree);
+                    try {
+                        activeSisu.setModules();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    root.setExpanded(true);
+                    for (int i = 0; i < activeSisu.getModules().size(); i++) {
+                        TreeItem module = new TreeItem<>(activeSisu.getModules().get(i));
+                        root.getChildren().add(module);
+                    }
+                }
+            }
+            
+        });
         
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -262,6 +299,7 @@ public class SisuGUI extends Application {
                     public void handle(DialogEvent t) {
                         if (isSuccesfullySaved) {
                             closeTab(studyViewTab);
+                            stage.close();
                         }
                     }
                 });

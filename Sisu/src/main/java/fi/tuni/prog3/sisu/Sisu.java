@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 public class Sisu {
     private Student activeStudent;
     private TreeMap<String, Degree> degrees;
+    private Degree selectedDegree;
+    private TreeMap<String, Module> modules;
+    
 
     public Sisu(String studentName, String studentNr, String... years) throws IOException {
         switch (years.length) {
@@ -66,6 +69,22 @@ public class Sisu {
 
         // Placeholder-koodi kunnes metodi on toteutettu.
         return true;
+    }
+    
+    public void setSelectedDegree(String selectedDegreeStr) {
+        this.selectedDegree = this.degrees.get(selectedDegreeStr);
+    }
+    
+    public Degree getSelectedDegree() {
+        return this.selectedDegree;
+    }
+    
+    public void setModules() throws IOException {
+        this.modules = JSONHandler.readModules(this.selectedDegree);
+    }
+    
+    public ArrayList<String> getModules() {
+        return new ArrayList<>(this.modules.keySet());
     }
 
     //Tämä metodi on vain ohjelman testaamista varten kunnes API saadaan käyttöön.
