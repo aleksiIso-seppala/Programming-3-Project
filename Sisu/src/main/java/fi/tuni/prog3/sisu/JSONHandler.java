@@ -178,8 +178,29 @@ public class JSONHandler {
         }
     }
     
+    public static void writeStudentData(Student st) throws IOException {
+        
+        String file = "StudenData.json";
+        TreeMap<String, Student> map = new TreeMap<>();
+        map.put(st.getStudentNr(), st);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Writer writer = new FileWriter(file);
+        gson.toJson(map, writer);
+        writer.close();
+    }
+    
+    public static void readStudentData(Student st) throws IOException {
+        
+        String file = "StudentData.json";
+        
+    }
+    
     public static void main(String args[]) throws IOException {
-        readDegrees();
+        //readDegrees();
+        //Student st = new Student("Matti","007");
+        //Student st2 = new Student("Maija","1");
+        //writeStudentData(st);
+        //writeStudentData(st2);
     }
     
     
