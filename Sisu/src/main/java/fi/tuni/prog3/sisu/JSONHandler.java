@@ -177,7 +177,7 @@ public class JSONHandler {
             }
 
             
-            ArrayList<Course> courses = new ArrayList<>();
+            TreeMap<String,Course> courses = new TreeMap<>();
             Module module = new Module(courses, name, groupId, credits);
             
             while(rules.get("type").getAsString().equals("CreditsRule")){

@@ -2,6 +2,7 @@
 package fi.tuni.prog3.sisu;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  *
@@ -10,15 +11,15 @@ import java.util.ArrayList;
 
 public class Module {
 
-    private ArrayList<Course> courses;
-    private ArrayList<Module> modules;
+    private TreeMap<String,Course> courses;
+    private TreeMap<String,Module> modules;
     private Degree degree;
     private String name;
     private String id;
     private int credits;
     
     
-    public Module(ArrayList<Course> courses,
+    public Module(TreeMap<String,Course> courses,
             String name,
             String id, 
             int credits) {
@@ -28,10 +29,10 @@ public class Module {
         this.degree = degree;
         this.name = name;
         this.id = id;
-        this.modules = new ArrayList<>();
+        this.modules = new TreeMap<>();
     }
     
-    public ArrayList<Course> getCourses() {
+    public TreeMap<String,Course> getCourses() {
         return this.courses;
     }
     
@@ -52,11 +53,11 @@ public class Module {
     }
     
     public void addModule(Module module){
-        this.modules.add(module);
+        this.modules.put(module.getName(),module);
     }
     
     public void addCourse(Course course){
-        this.courses.add(course);
+        this.courses.put(course.getName(),course);
     }
     
     @Override
