@@ -10,12 +10,16 @@ import java.io.*;
 import java.nio.charset.*;
 import java.util.ArrayList;
 import com.google.gson.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.TreeMap;
 /**
  *
  * @author Aleksi Iso-Seppälä
  */
 public class JSONHandler {
+    
+    private final static String STUDENT_FILE = "StudentData.json";
 
     public static TreeMap<String, Degree> readDegrees() throws MalformedURLException, IOException{
         
@@ -275,27 +279,35 @@ public class JSONHandler {
     
     public static void writeStudentData(Student st) throws IOException {
         
-        String file = "StudenData.json";
-        TreeMap<String, Student> map = new TreeMap<>();
-        map.put(st.getStudentNr(), st);
+        //TreeMap<String, Student> data = readAllStudentData();
+        //if(!data.containsKey(st.getStudentNr())) {
+        //    data.put(st.getStudentNr(), st);
+        //}
+        TreeMap<String,Student> data = new TreeMap<>();
+        data.put(st.getStudentNr(),st);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Writer writer = new FileWriter(file);
-        gson.toJson(map, writer);
+        Writer writer = new FileWriter(STUDENT_FILE);
+        gson.toJson(data, writer);
         writer.close();
     }
-    
-    public static void readStudentData(Student st) throws IOException {
+    /*
+    public static TreeMap<String, Student> readAllStudentData() throws IOException {
         
-        String file = "StudentData.json";
+        Gson gson = new Gson();
+        Reader reader = new FileReader(STUDENT_FILE);
+        TreeMap<String, Student> data = gson.fromJson(reader,Map.class);
+        
+        return data;
         
     }
+    */
     
     public static void main(String args[]) throws IOException {
-        readDegrees();
-        //Student st = new Student("Matti","007");
-        //Student st2 = new Student("Maija","1");
-        //writeStudentData(st);
-        //writeStudentData(st2);
+        //readDegrees();
+        Student st = new Student("Matti","007");
+        Student st2 = new Student("Maija","1");
+        writeStudentData(st);
+        writeStudentData(st2);
     }
     
     
