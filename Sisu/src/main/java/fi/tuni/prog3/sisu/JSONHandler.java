@@ -81,7 +81,8 @@ public class JSONHandler {
                 JsonObject object1 = rule.getAsJsonObject();
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
-                    readModule(moduleId);
+                    Module module = readModule(moduleId);
+                    selectedDegree.addModule(module);
                 }
             }
         }
