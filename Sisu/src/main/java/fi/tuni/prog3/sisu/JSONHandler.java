@@ -42,15 +42,20 @@ public class JSONHandler {
             JsonObject degree = (JsonObject) object;
             String groupId = degree.get("groupId").getAsString();
             String name = degree.get("name").getAsString();
-            Degree degreeClass = readDegree(groupId);
+            
+            var creditsO = degree.getAsJsonObject("credits");
+            int credits = creditsO.get("min").getAsInt();            
+            
+            Degree degreeClass = new Degree(credits, name, groupId);
             degrees.put(name, degreeClass);
         }
 
         return degrees;
     }
     
-    public static Degree readDegree(String groupId) throws MalformedURLException, IOException{
-
+    public static void readDegree(Degree selectedDegree) throws MalformedURLException, IOException{
+        
+        String groupId = selectedDegree.getId();
         String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
         + "by-group-id?groupId=" + groupId + 
         "&universityId=tuni-university-root-id";
@@ -62,24 +67,8 @@ public class JSONHandler {
         JsonArray response = gson.fromJson(input,JsonArray.class);        
         
         for(var object : response){
+            
             JsonObject degree = (JsonObject) object;
-            if(degree == null){
-                continue;
-            }
-            
-            String name;
-            JsonObject nameObject = degree.getAsJsonObject("name");
-            if(nameObject.get("fi") == null){
-                //name = degree.get("en").getAsString();
-                name = null;
-            }
-            else{
-                name = nameObject.get("fi").toString();               
-            }
-            var creditsO = degree.getAsJsonObject("targetCredits");
-            int credits = creditsO.get("min").getAsInt();
-            
-            Degree degreeObject = new Degree(credits, name, groupId);
             
             JsonObject rules = degree.getAsJsonObject("rule");
             var innerRule = rules.getAsJsonArray("rules");
@@ -87,18 +76,17 @@ public class JSONHandler {
                 var tempRule = rules.getAsJsonObject("rule");
                 innerRule = tempRule.getAsJsonArray("rules");
             }
-            //tämä käy moduulit läpi, jätetään myöhemmälle
+
             for(var rule : innerRule){
                 JsonObject object1 = rule.getAsJsonObject();
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
-                    //readModule(moduleId);
+                    readModule(moduleId);
                 }
             }
-            return degreeObject; 
         }
         
-        return null;
+        return;
     } 
     
     public static TreeMap<String, Module> readModules(Degree selectedDegree) throws 
@@ -303,11 +291,11 @@ public class JSONHandler {
     */
     
     public static void main(String args[]) throws IOException {
-        //readDegrees();
-        Student st = new Student("Matti","007");
-        Student st2 = new Student("Maija","1");
-        writeStudentData(st);
-        writeStudentData(st2);
+        readDegrees();
+//        Student st = new Student("Matti","007");
+//        Student st2 = new Student("Maija","1");
+//        writeStudentData(st);
+//        writeStudentData(st2);
     }
     
     
