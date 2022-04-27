@@ -82,12 +82,9 @@ public class JSONHandler {
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
                     Module module = readModule(moduleId);
-                    if(selectedDegree.getStudyPoints() == 0){
-                        selectedDegree.addStudyField(module);
-                    }
-                    else{
-                        selectedDegree.addModule(module);
-                    }
+                    selectedDegree.addStudyField(module);
+
+
 
                 }
             }
@@ -199,7 +196,7 @@ public class JSONHandler {
     }
     
     public static void readArray(JsonArray array, Module module) throws IOException{
-        
+                
         for(JsonElement element : array){
             if(element.isJsonArray()){
                 readArray(element.getAsJsonArray(), module);
