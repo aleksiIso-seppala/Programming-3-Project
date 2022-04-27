@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Lauri Kalliojärvi
  */
 
-public class Course {
+public class Course implements Comparable<Course>{
 
     private int studyPoints;
     private ArrayList<Degree> degrees;
@@ -44,5 +44,10 @@ public class Course {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public int compareTo(Course o) {
+        return name.compareTo(o.getName());
     }
 }

@@ -21,13 +21,15 @@ public class Student {
     
     public Student(String studentName, String studentNr) {
         this.studentName = studentName;
-        this.studentNr = studentNr; 
+        this.studentNr = studentNr;
+        this.completions = new TreeMap<>();
     }
     
     public Student(String studentName, String studentNr, String startingYear) {
         this.studentName = studentName;
         this.studentNr = studentNr;
         this.startingYear = startingYear;
+        this.completions = new TreeMap<>();
     }
     public Student(String studentName, 
             String studentNr, 
@@ -37,6 +39,7 @@ public class Student {
         this.studentNr = studentNr;
         this.startingYear = startingYear;
         this.finishingYear = finishingYear;
+        this.completions = new TreeMap<>();
     }
     
     public String getName() {
@@ -80,7 +83,7 @@ public class Student {
     }
     
     public void completeCourse(Course completedCourse) {
-        this.completions.put(completedCourse,completedCourse.getStudyPoints());
+        completions.put(completedCourse,completedCourse.getStudyPoints());
     }
     
     public void removeCourse(Course removedCourse) {

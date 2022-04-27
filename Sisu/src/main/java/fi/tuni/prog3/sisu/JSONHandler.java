@@ -13,6 +13,7 @@ import com.google.gson.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.TreeMap;
+import java.nio.file.Files;
 /**
  *
  * @author Aleksi Iso-Seppälä
@@ -269,37 +270,89 @@ public class JSONHandler {
         return null;
     }
     
-    public static void writeStudentData(Student st) throws IOException {
+    public static void writeAllStudentData(ArrayList<Student> students) throws IOException {
         
-        //TreeMap<String, Student> data = readAllStudentData();
-        //if(!data.containsKey(st.getStudentNr())) {
-        //    data.put(st.getStudentNr(), st);
-        //}
-        TreeMap<String,Student> data = new TreeMap<>();
-        data.put(st.getStudentNr(),st);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Writer writer = new FileWriter(STUDENT_FILE);
-        gson.toJson(data, writer);
+        Writer writer  = new FileWriter(STUDENT_FILE);
+        JsonArray userData = new JsonArray();
+        for(var student : students){
+            JsonObject user = new JsonObject();
+            user.addProperty("studentName",student.getName());
+            user.addProperty("studentNr",student.getStudentNr());
+            user.addProperty("startingYear",student.getStartingYear());
+            user.addProperty("finishingYear",student.getFinishingYear());
+            JsonArray completions = new JsonArray();
+
+            for(var completion : student.getCompletions().entrySet()){
+                    completions.add(completion.getKey().getId());
+            }
+            user.add("completions", completions);
+            userData.add(user);
+        }
+        
+        gson.toJson(userData, writer);
         writer.close();
+        
     }
-    /*
-    public static TreeMap<String, Student> readAllStudentData() throws IOException {
+    
+    public static ArrayList<Student> readAllStudentData() throws IOException {
         
         Gson gson = new Gson();
-        Reader reader = new FileReader(STUDENT_FILE);
-        TreeMap<String, Student> data = gson.fromJson(reader,Map.class);
+        Reader reader = Files.newBufferedReader(Paths.get(STUDENT_FILE));
+        JsonArray response = gson.fromJson(reader, JsonArray.class);
         
-        return data;
+        
+        ArrayList<Student> students = new ArrayList<>();
+        
+        for(var data : response){
+            JsonObject element = (JsonObject) data;
+            String name = element.get("studentName").getAsString();
+            String studentNumber  = element.get("studentNr").getAsString();
+            
+            String startingYear = null;
+            String finishingYear = null;
+            if(element.get("startingYear") != null){
+                startingYear = element.get("startingYear").getAsString();
+                if(element.get("finishingYear") != null){
+                    finishingYear = element.get("finishingYear").getAsString();
+                }
+            }
+            
+            Student student = new Student(name,studentNumber,startingYear,finishingYear);
+            
+            JsonArray completions = element.getAsJsonArray("completions");
+            for(var course : completions){
+                String courseId = course.getAsString();
+                Course courseClass = readCourse(courseId);
+                student.completeCourse(courseClass);
+            }
+            students.add(student);
+        }
+
+        return students;
         
     }
-    */
     
     public static void main(String args[]) throws IOException {
         readDegrees();
-//        Student st = new Student("Matti","007");
-//        Student st2 = new Student("Maija","1");
-//        writeStudentData(st);
-//        writeStudentData(st2);
+        Student st = new Student("Matti","007","2015");
+        Student st2 = new Student("Maija","1");
+        ArrayList<Student> students = new ArrayList<>();
+        Course course1 = new Course(5,"Tietotekniikka","tut-1");
+        Course course2 = new Course(5,"sähkötekniikka","tut-2");
+        Course course3 = new Course(5,"signaalit ja mittaus","tut-3");
+        Course course4 = new Course(5,"ohjemlointi 1","tut-4");        
+        Course course5 = new Course(5,"ohjelmointi 2","tut-5");
+        Course course6 = new Course(5,"tetapk","tut-6");
+        students.add(st);
+        students.add(st2);
+        st.completeCourse(course1);
+        st.completeCourse(course2);
+        st.completeCourse(course3);
+        st2.completeCourse(course4);
+        st2.completeCourse(course5);
+        st2.completeCourse(course6);
+        writeAllStudentData(students);
     }
     
     
