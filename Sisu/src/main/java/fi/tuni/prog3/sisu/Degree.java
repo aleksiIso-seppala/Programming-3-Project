@@ -14,6 +14,7 @@ public class Degree {
    private int studyPoints;
    private String name;
    private String id;
+   private Module selectedField;
    
    public Degree(
            int studyPoints,
@@ -57,5 +58,13 @@ public class Degree {
    @Override
     public String toString() {
         return this.name;
+    }
+
+    public void setSelectedField(String selectedFieldStr) {
+        this.selectedField = this.studyFields.get(selectedFieldStr);
+    }
+    
+    public Module getSelectedField() {
+        return this.selectedField;
     }
 }

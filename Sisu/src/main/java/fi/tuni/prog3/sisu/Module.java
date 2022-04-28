@@ -64,4 +64,8 @@ public class Module {
     public String toString() {
         return this.name;
     }
+
+    public TreeMap<String,Module> getModules() {
+        return this.modules;
+    }
 }

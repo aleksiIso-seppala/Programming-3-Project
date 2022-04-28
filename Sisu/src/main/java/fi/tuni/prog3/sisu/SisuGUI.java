@@ -232,19 +232,39 @@ public class SisuGUI extends Application {
         degreeChoiceBox.setOnHidden(new EventHandler<>(){
             @Override
             public void handle(Event t) {
-                if (courseTreeView.getRoot() != null) {
-                    if (!courseTreeView.getRoot().getChildren().isEmpty()) {
-                        for (int i = 0; i < courseTreeView.getRoot().
-                                                getChildren().size() ; i++) {
-                            courseTreeView.getRoot().getChildren().remove(i);
-                        }
+//                if (courseTreeView.getRoot() != null) {
+//                    if (!courseTreeView.getRoot().getChildren().isEmpty()) {
+//                        for (int i = 0; i < courseTreeView.getRoot().
+//                                                getChildren().size() ; i++) {
+//                            courseTreeView.getRoot().getChildren().remove(i);
+//                        }
+//                    }
+//                }
+//                
+//                TreeItem<String> root = new TreeItem<>("Root Node");
+//                courseTreeView.setShowRoot(false);
+//                courseTreeView.setRoot(root);
+//                
+//                if (degreeChoiceBox.getSelectionModel().getSelectedItem() != null) {
+//                    String selectedDegree = (String) degreeChoiceBox.
+//                                        getSelectionModel().getSelectedItem();
+//                    activeSisu.setSelectedDegree(selectedDegree);
+//                    try {
+//                        activeSisu.setModules();
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                    root.setExpanded(true);
+//                    for (int i = 0; i < activeSisu.getModules().size(); i++) {
+//                        TreeItem module = new TreeItem<>(activeSisu.getModules().get(i));
+//                        root.getChildren().add(module);
+//                    }
+//                }
+                if (!fieldChoiceBox.getItems().isEmpty()) {
+                    for (int i = 0; i < fieldChoiceBox.getItems().size(); i++) {
+                        fieldChoiceBox.getItems().remove(i);
                     }
                 }
-                
-                TreeItem<String> root = new TreeItem<>("Root Node");
-                courseTreeView.setShowRoot(false);
-                courseTreeView.setRoot(root);
-                
                 if (degreeChoiceBox.getSelectionModel().getSelectedItem() != null) {
                     String selectedDegree = (String) degreeChoiceBox.
                                         getSelectionModel().getSelectedItem();
@@ -254,14 +274,56 @@ public class SisuGUI extends Application {
                     } catch (IOException ex) {
                         Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    root.setExpanded(true);
-                    for (int i = 0; i < activeSisu.getModules().size(); i++) {
-                        TreeItem module = new TreeItem<>(activeSisu.getModules().get(i));
-                        root.getChildren().add(module);
+                    if (activeSisu.getSelectedDegree().getStudyFields().isEmpty()) {
+                        try {
+                            for (String module : activeSisu.getSelectedDegree().
+                                                        getModules().keySet()) {
+                            populateTreeView(courseTreeView, 
+                                    activeSisu.getSelectedDegree().getModules().
+                                    get(module));   
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    else {
+                        ObservableList<String> studyFields = FXCollections.
+                                    observableArrayList(activeSisu.
+                                            getSelectedDegree().
+                                            getStudyFields().keySet());
+                        fieldChoiceBox.getItems().addAll(studyFields);
+//                        for (int i = 0; i < studyFields.size(); i++) {
+//                            
+//                            fieldChoiceBox.getItems().add(studyFields.get(i));
+//                        }
+                    }
+                }
+
+            }
+        });
+        
+        fieldChoiceBox.setOnHidden(new EventHandler<>(){
+            @Override
+            public void handle(Event t) {
+                if (fieldChoiceBox.getSelectionModel().getSelectedItem() != null) {
+                    String selectedField = (String) fieldChoiceBox.
+                                        getSelectionModel().getSelectedItem();
+                    activeSisu.getSelectedDegree().setSelectedField(selectedField);
+                    try {
+                        activeSisu.setModules();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        populateTreeView(courseTreeView, 
+                                activeSisu.getSelectedDegree().getStudyFields().
+                                get((String) fieldChoiceBox.getSelectionModel().
+                                getSelectedItem()));
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
-            
         });
         
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -307,16 +369,29 @@ public class SisuGUI extends Application {
         });
     }
     
-    public ObservableList<CheckBox> initCourseCheckBoxes() {
-        ObservableList<CheckBox> checkBoxes = FXCollections
-                                                        .observableArrayList();
-        ArrayList<Course> courses = activeSisu.getActiveStudent().getActiveDegree()
-                                                        .getCourses();
-        for (var course : courses) {
-            CheckBox checkBox = new CheckBox(course.toString());
-            checkBoxes.add(checkBox);
+//    public ObservableList<CheckBox> initCourseCheckBoxes() {
+//        ObservableList<CheckBox> checkBoxes = FXCollections
+//                                                        .observableArrayList();
+//        ArrayList<Course> courses = activeSisu.getActiveStudent().getActiveDegree()
+//                                                        .getCourses();
+//        for (var course : courses) {
+//            CheckBox checkBox = new CheckBox(course.toString());
+//            checkBoxes.add(checkBox);
+//        }
+//        return checkBoxes;
+//    }
+    
+    private void populateTreeView(TreeView treeView, Module module) throws IOException {
+        TreeItem<String> root = new TreeItem<>("Root Node");
+        treeView.setShowRoot(false);
+        treeView.setRoot(root);
+        if (!treeView.getRoot().getChildren().isEmpty()) {
+            for (int i = 0; i < treeView.getRoot().getChildren().size(); i++) {
+                treeView.getRoot().getChildren().remove(i);
+            }
         }
-        return checkBoxes;
+        TreeItem<String> content = activeSisu.getModuleContent(module);
+        root.getChildren().add(content);
     }
     
     private void closeTab(Tab tab) {

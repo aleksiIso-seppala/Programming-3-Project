@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -19,7 +20,7 @@ public class Sisu {
     private Student activeStudent;
     private TreeMap<String, Degree> degrees;
     private Degree selectedDegree;
-    private TreeMap<String, Module> modules;
+    //private TreeMap<String, Module> modules;
     
 
     public Sisu(String studentName, String studentNr, String... years) throws IOException {
@@ -80,39 +81,60 @@ public class Sisu {
     }
     
     public void setModules() throws IOException {
-        this.modules = JSONHandler.readModules(this.selectedDegree);
+        JSONHandler.readDegree(this.selectedDegree);
     }
     
     public ArrayList<String> getModules() {
-        return new ArrayList<>(this.modules.keySet());
-    }
-
-    //Tämä metodi on vain ohjelman testaamista varten kunnes API saadaan käyttöön.
-    public void initForTests() {
-        /*Course course1 = new Course(5, new ArrayList<Degree>(), "Kurssi 1", "AAA-001");
-        Course course2 = new Course(5, new ArrayList<Degree>(), "Kurssi 2", "BBB-002");
-        Course course3 = new Course(5, new ArrayList<Degree>(), "Kurssi 3", "CCC-003");
-        Course course4 = new Course(5, new ArrayList<Degree>(), "Kurssi 4", "DDD-004");
-        Course course5 = new Course(5, new ArrayList<Degree>(), "Kurssi 5", "EEE-005");
-        Course course6 = new Course(5, new ArrayList<Degree>(), "Kurssi 6", "FFF-006");
-        Course course7 = new Course(5, new ArrayList<Degree>(), "Kurssi 7", "GGG-007");
-        Course course8 = new Course(5, new ArrayList<Degree>(), "Kurssi 8", "HHH-008");
-        Course course9 = new Course(5, new ArrayList<Degree>(), "Kurssi 9", "III-009");
-        
-        ArrayList<Course> courses1_3 = new ArrayList<>();
-        courses1_3.add(course1);
-        courses1_3.add(course2);
-        courses1_3.add(course3);
-        
-        ArrayList<Course> courses4_6 = new ArrayList<>();
-        courses1_3.add(course4);
-        courses1_3.add(course5);
-        courses1_3.add(course6);
-        
-        ArrayList<Course> courses7_9 = new ArrayList<>();
-        courses1_3.add(course7);
-        courses1_3.add(course8);
-        courses1_3.add(course9);*/
+        return new ArrayList<>(this.selectedDegree.getStudyFields().keySet());
     }
     
+    public ArrayList<String> getStudyFields() {
+        return new ArrayList<>(this.selectedDegree.getStudyFields().keySet());
+    }
+    
+    public TreeItem<String> getModuleContent(Module module) throws IOException {
+//        for (var m : this.selectedDegree.getStudyFields().keySet()) {
+//            System.out.println(m);
+//        }
+//        Module module = JSONHandler.readModule(
+//                this.selectedDegree.getStudyFields().get(moduleStr).getId());
+        TreeItem<String> moduleTi = new TreeItem<>(module.getName());
+        for (var subModule : module.getModules().entrySet()) {
+            moduleTi.getChildren().add(getModuleContent(subModule.getValue()));
+        }
+        for (String course : module.getCourses().keySet()) {
+            TreeItem<String> courseTi = new TreeItem<>(course.toString());
+            moduleTi.getChildren().add(courseTi);
+        }
+        return moduleTi;
+    }
+
+//    //Tämä metodi on vain ohjelman testaamista varten kunnes API saadaan käyttöön.
+//    public void initForTests() {
+//        /*Course course1 = new Course(5, new ArrayList<Degree>(), "Kurssi 1", "AAA-001");
+//        Course course2 = new Course(5, new ArrayList<Degree>(), "Kurssi 2", "BBB-002");
+//        Course course3 = new Course(5, new ArrayList<Degree>(), "Kurssi 3", "CCC-003");
+//        Course course4 = new Course(5, new ArrayList<Degree>(), "Kurssi 4", "DDD-004");
+//        Course course5 = new Course(5, new ArrayList<Degree>(), "Kurssi 5", "EEE-005");
+//        Course course6 = new Course(5, new ArrayList<Degree>(), "Kurssi 6", "FFF-006");
+//        Course course7 = new Course(5, new ArrayList<Degree>(), "Kurssi 7", "GGG-007");
+//        Course course8 = new Course(5, new ArrayList<Degree>(), "Kurssi 8", "HHH-008");
+//        Course course9 = new Course(5, new ArrayList<Degree>(), "Kurssi 9", "III-009");
+//        
+//        ArrayList<Course> courses1_3 = new ArrayList<>();
+//        courses1_3.add(course1);
+//        courses1_3.add(course2);
+//        courses1_3.add(course3);
+//        
+//        ArrayList<Course> courses4_6 = new ArrayList<>();
+//        courses1_3.add(course4);
+//        courses1_3.add(course5);
+//        courses1_3.add(course6);
+//        
+//        ArrayList<Course> courses7_9 = new ArrayList<>();
+//        courses1_3.add(course7);
+//        courses1_3.add(course8);
+//        courses1_3.add(course9);*/
+//    }
+//    
 }
