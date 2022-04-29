@@ -12,11 +12,13 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 
 /**
  *
  * @author Lauri Kalliojärvi
  */
+@Disabled("Disabled")
 public class StudentTest {
     
     Student testStudent1;
@@ -33,7 +35,6 @@ public class StudentTest {
     
     public StudentTest() {
     }
-    
     @BeforeAll
     public void setUpClass() {
         Student testStudent1 = new Student(studentName, studentNr);
@@ -43,12 +44,10 @@ public class StudentTest {
         Course testCourse2 = new Course(5,"BBB","002");
         Degree testDegree = new Degree(180,"A","1");
     }
-    
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         System.out.println(testInfo.getDisplayName());
     }
-
     @Test
     @DisplayName("Testing Student.testGetName()")
     public void testGetName() {
@@ -56,14 +55,13 @@ public class StudentTest {
         String result = testStudent1.getName();
         assertEquals(expResult, result);
     }
-
+    @Test
     @DisplayName("Testing Student.getStudentNr()")
     public void testGetStudentNr() {
         String expResult = studentNr;
         String result = testStudent1.getStudentNr();
         assertEquals(expResult, result);
     }
-    
     @ParameterizedTest
     @MethodSource("yearProvider")
     @DisplayName("Testing Student.getStartingYear")
@@ -77,7 +75,6 @@ public class StudentTest {
             assertEquals(expResult, result);
         }
     }
-
     @ParameterizedTest
     @MethodSource("yearProvider")
     @DisplayName("Testing Student.getFinishingYear")
@@ -91,7 +88,6 @@ public class StudentTest {
             assertEquals(expResult, result);
         }
     }
-
     @Test
     @DisplayName("Testing Student.getCompletions()")
     public void testGetCompletions() {
@@ -99,10 +95,7 @@ public class StudentTest {
         TreeMap<Course, Integer> expResult = null;
         TreeMap<Course, Integer> result = instance.getCompletions();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.getActiveStudyField()")
     public void testGetActiveStudyField() {
@@ -111,10 +104,7 @@ public class StudentTest {
         StudyField expResult = null;
         StudyField result = instance.getActiveStudyField();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.getActiveDegree()")
     public void testGetActiveDegree() {
@@ -123,10 +113,7 @@ public class StudentTest {
         Degree expResult = null;
         Degree result = instance.getActiveDegree();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.setCompletions()")
     public void testSetCompletions() {
@@ -134,10 +121,7 @@ public class StudentTest {
         TreeMap<Course, Integer> newCompletions = null;
         Student instance = null;
         instance.setCompletions(newCompletions);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.setActiveDegree()")
     public void testSetActiveDegree() {
@@ -145,10 +129,7 @@ public class StudentTest {
         Degree newActiveDegree = null;
         Student instance = null;
         instance.setActiveDegree(newActiveDegree);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.setActiveStudyField()")
     public void testSetActiveStudyField() {
@@ -156,10 +137,7 @@ public class StudentTest {
         StudyField newActiveStudyField = null;
         Student instance = null;
         instance.setActiveStudyField(newActiveStudyField);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.completeCourse()")
     public void testCompleteCourse() {
@@ -167,10 +145,7 @@ public class StudentTest {
         Course completedCourse = null;
         Student instance = null;
         instance.completeCourse(completedCourse);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.removeCourse()")
     public void testRemoveCourse() {
@@ -178,10 +153,7 @@ public class StudentTest {
         Course removedCourse = null;
         Student instance = null;
         instance.removeCourse(removedCourse);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-
     @Test
     @DisplayName("Testing Student.toString()")
     public void testToString() {
@@ -190,8 +162,6 @@ public class StudentTest {
         String expResult = "";
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
     public static Stream<String> yearProvider() {

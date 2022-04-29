@@ -8,28 +8,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.api.Disabled;
 /**
  *
  * @author Lauri Kalliojärvi
  */
+@Disabled("Disabled")
 public class CourseTest {
     
     Course testCourse;
     int studyPoints = 5;
     String courseName = "Kurssi 1";
     String courseId = "AAA-001";
-    
     @BeforeAll
     void setUpClass(TestInfo testInfo) throws Exception {
         this.testCourse = new Course(studyPoints, courseName, courseId);
     }
-    
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         System.out.println(testInfo.getDisplayName());
     }
-    
     @Test
     @DisplayName("Testing Course.getStudyPoints()")
     public void testGetStudyPoints() {
@@ -37,7 +35,6 @@ public class CourseTest {
         int result = this.testCourse.getStudyPoints();
         assertEquals(expResult, result);
     }
-
     @Test
     @DisplayName("Testing Course.getName()")
     public void testGetName() {
@@ -45,7 +42,6 @@ public class CourseTest {
         String result = testCourse.getName();
         assertEquals(expResult, result);
     }
-
     @Test
     @DisplayName("Testing Course.getId()")
     public void testGetId() {
@@ -53,7 +49,6 @@ public class CourseTest {
         String result = testCourse.getId();
         assertEquals(expResult, result);
     }
-
     @Test
     @DisplayName("Testing Course.toString()")
     public void testToString() {
@@ -61,7 +56,6 @@ public class CourseTest {
         String result = testCourse.toString();
         assertEquals(expResult, result);
     }
-
     @Test
     @DisplayName("Testing.Course.compareTo")
     public void testCompareTo() {
