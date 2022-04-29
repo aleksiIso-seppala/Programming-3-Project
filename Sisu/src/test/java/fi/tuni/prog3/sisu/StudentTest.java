@@ -104,7 +104,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.getActiveStudyField()")
     public void testGetActiveStudyField() {
         System.out.println("getActiveStudyField");
         Student instance = null;
@@ -116,7 +116,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.getActiveDegree()")
     public void testGetActiveDegree() {
         System.out.println("getActiveDegree");
         Student instance = null;
@@ -128,7 +128,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.setCompletions()")
     public void testSetCompletions() {
         System.out.println("setCompletions");
         TreeMap<Course, Integer> newCompletions = null;
@@ -139,7 +139,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.setActiveDegree()")
     public void testSetActiveDegree() {
         System.out.println("setActiveDegree");
         Degree newActiveDegree = null;
@@ -150,7 +150,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.setActiveStudyField()")
     public void testSetActiveStudyField() {
         System.out.println("setActiveStudyField");
         StudyField newActiveStudyField = null;
@@ -161,7 +161,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.completeCourse()")
     public void testCompleteCourse() {
         System.out.println("completeCourse");
         Course completedCourse = null;
@@ -172,7 +172,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.removeCourse()")
     public void testRemoveCourse() {
         System.out.println("removeCourse");
         Course removedCourse = null;
@@ -183,7 +183,7 @@ public class StudentTest {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Testing Student.toString()")
     public void testToString() {
         System.out.println("toString");
         Student instance = null;
