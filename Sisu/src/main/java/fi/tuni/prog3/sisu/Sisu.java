@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 public class Sisu {
     private Student activeStudent;
+    private ArrayList<Student> savedStudents;
     private TreeMap<String, Degree> degrees;
     private Degree selectedDegree;
     //private TreeMap<String, Module> modules;
@@ -38,10 +39,17 @@ public class Sisu {
             default:
                 break;
         }
-        
-        // TODO: Etsitään tiedostosta luotua student-oliota vastaavat tiedot,
-        //       jos ei löydy, niin luodaan uudet tiedot.
-        
+        this.savedStudents = JSONHandler.readAllStudentData();
+        for ( Student savedStudent : this.savedStudents){
+            if(savedStudent.getStudentNr().equals(this.activeStudent.getStudentNr())){
+                this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
+                this.activeStudent.setActiveStudyField(savedStudent.getActiveStudyField());
+                this.activeStudent.setCompletions(savedStudent.getCompletions());
+                this.savedStudents.remove(savedStudent);
+                this.savedStudents.add(this.activeStudent);
+            }
+        }
+
         // TODO: Haetaan tiedot tutkinto-ohjelmista, luodaan ne ja talletetaan
         //       this.degrees
         this.degrees = JSONHandler.readDegrees();
@@ -55,21 +63,14 @@ public class Sisu {
         return new ArrayList<>(this.degrees.keySet());
     }
     
-    public boolean saveStudentData() /*throws FileNotFoundException*/ {
+    public boolean saveStudentData() throws IOException {
         
-        // TODO: Tallenetaan opiskelijan opintotiedot oikeaan tiedostoon. Jos
-        //       tiedosto löytyy ja tallennus onnistuu palautetaan true, jos ei
-        //       niin false.
-        
-//        try {
-//            return true;
-//        }
-//        catch(FileNotFoundException e) {
-//            return false;
-//        }
-
-        // Placeholder-koodi kunnes metodi on toteutettu.
-        return true;
+        try{
+            JSONHandler.writeAllStudentData(this.savedStudents);
+            return true;
+        } catch(IOException ex){
+            return false;
+        }
     }
     
     public void setSelectedDegree(String selectedDegreeStr) {
