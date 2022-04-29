@@ -333,6 +333,7 @@ public class JSONHandler {
         
     }
     
+    
     public static void main(String args[]) throws IOException {
         readDegrees();
         Student st = new Student("Matti","007","2015");

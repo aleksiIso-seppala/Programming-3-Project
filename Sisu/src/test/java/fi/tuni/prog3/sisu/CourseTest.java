@@ -3,65 +3,67 @@ package fi.tuni.prog3.sisu;
 
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Disabled;
 /**
  *
  * @author Lauri Kalliojärvi
  */
-@Disabled("Disabled")
 public class CourseTest {
     
-    Course testCourse;
-    int studyPoints = 5;
-    String courseName = "Kurssi 1";
-    String courseId = "AAA-001";
-    @BeforeAll
-    void setUpClass(TestInfo testInfo) throws Exception {
-        this.testCourse = new Course(studyPoints, courseName, courseId);
-    }
+    public static final int STUDY_POINTS = 5;
+    public static final String COURSE1_NAME = "Kurssi 1";
+    public static final String COURSE_ID = "AAA-001";
+    
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         System.out.println(testInfo.getDisplayName());
     }
+    /*
     @Test
-    @DisplayName("Testing Course.getStudyPoints()")
+    @DisplayName("Testing getStudyPoints")
     public void testGetStudyPoints() {
-        int expResult = studyPoints;
-        int result = this.testCourse.getStudyPoints();
+        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        int expResult = STUDY_POINTS;
+        int result = c.getStudyPoints();
         assertEquals(expResult, result);
     }
+*/
     @Test
-    @DisplayName("Testing Course.getName()")
+    @DisplayName("Testing getName")
     public void testGetName() {
-        String expResult = courseName;
-        String result = testCourse.getName();
+        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        String expResult = COURSE1_NAME;
+        String result = c.getName();
         assertEquals(expResult, result);
     }
     @Test
-    @DisplayName("Testing Course.getId()")
+    @DisplayName("Testing getId")
     public void testGetId() {
-        String expResult = courseId;
-        String result = testCourse.getId();
+        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        String expResult = COURSE_ID;
+        String result = c.getId();
         assertEquals(expResult, result);
     }
     @Test
-    @DisplayName("Testing Course.toString()")
+    @DisplayName("Testing toString")
     public void testToString() {
-        String expResult = courseName;
-        String result = testCourse.toString();
+        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        String expResult = COURSE1_NAME;
+        String result = c.toString();
         assertEquals(expResult, result);
     }
     @Test
-    @DisplayName("Testing.Course.compareTo")
+    @DisplayName("Testing compareTo")
     public void testCompareTo() {
-        Course compare = new Course(5,"Kurssi 1","AAA-001");
+        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        Course compare = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
         int expResult = 0;
-        int result = testCourse.compareTo(compare);
+        int result = c.compareTo(compare);
         assertEquals(expResult, result);
     }
     

@@ -1,6 +1,21 @@
-{
-  "1": {
+[
+  {
+    "studentName": "Matti",
+    "studentNr": "007",
+    "startingYear": "2015",
+    "completions": [
+      "tut-1",
+      "tut-3",
+      "tut-2"
+    ]
+  },
+  {
     "studentName": "Maija",
-    "studentNr": "1"
+    "studentNr": "1",
+    "completions": [
+      "tut-5",
+      "tut-4",
+      "tut-6"
+    ]
   }
-}
+]
