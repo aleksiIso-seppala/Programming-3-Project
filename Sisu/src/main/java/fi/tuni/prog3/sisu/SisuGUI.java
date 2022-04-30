@@ -4,6 +4,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -215,9 +216,9 @@ public class SisuGUI extends Application {
         completionsTitle.setPrefWidth(SHORT_FIELD_WIDTH);
         studyViewGrid.add(completionsTitle, 4, 2, 1, 1);
         
-        ListView completionsCblc = new ListView(/*initCourseCheckBoxes()*/);
-        completionsCblc.setPrefSize(LONG_FIELD_WIDTH, COMPLETED_LIST_HEIGHT);
-        studyViewGrid.add(completionsCblc, 4, 3, 2, 2);
+        ListView completionsView = new ListView(/*initCourseCheckBoxes()*/);
+        completionsView.setPrefSize(LONG_FIELD_WIDTH, COMPLETED_LIST_HEIGHT);
+        studyViewGrid.add(completionsView, 4, 3, 2, 2);
         
         Button saveButton = new Button("Tallenna ja sulje");
         saveButton.setPrefWidth(SHORT_FIELD_WIDTH);
@@ -331,22 +332,29 @@ public class SisuGUI extends Application {
             public void handle(ActionEvent t) {
                 // TODO: Vahvista valinnat ja anna ne Sisu-luokalle.
                 
-//                activeSisu.getStudent().setDegree();
-//                activeSisu.getStudent().setStudyField();
+                activeSisu.getActiveStudent().setActiveDegree(
+                                                activeSisu.getSelectedDegree());
+                activeSisu.getActiveStudent().setActiveStudyField(
+                            activeSisu.getSelectedDegree().getSelectedField());
+                completionsView.getItems().addAll(initCourseCheckBoxes());
             }
         });
         
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                boolean isSuccesfullySaved = activeSisu.saveStudentData();
+                try {
+                    activeSisu.saveStudentData();
+                } catch (IOException ex) {
+                    Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 Dialog saveDialog = new Dialog();
                 saveDialog.setTitle("HUOM!");
                 DialogPane dialogPane = new DialogPane();
                 dialogPane.getButtonTypes().add(
                             new ButtonType("OK", 
                                     ButtonBar.ButtonData.OK_DONE));
-                if (isSuccesfullySaved) {
+                if (activeSisu.getIsSuccessfullySaved()) {
                     dialogPane.setHeaderText("Tietojen tallennus onnistui.");
                 }
                 else {
@@ -359,7 +367,7 @@ public class SisuGUI extends Application {
                 saveDialog.setOnCloseRequest(new EventHandler<DialogEvent>() {
                     @Override
                     public void handle(DialogEvent t) {
-                        if (isSuccesfullySaved) {
+                        if (activeSisu.getIsSuccessfullySaved()) {
                             closeTab(studyViewTab);
                             stage.close();
                         }
@@ -369,17 +377,35 @@ public class SisuGUI extends Application {
         });
     }
     
-//    public ObservableList<CheckBox> initCourseCheckBoxes() {
-//        ObservableList<CheckBox> checkBoxes = FXCollections
-//                                                        .observableArrayList();
-//        ArrayList<Course> courses = activeSisu.getActiveStudent().getActiveDegree()
-//                                                        .getCourses();
-//        for (var course : courses) {
-//            CheckBox checkBox = new CheckBox(course.toString());
-//            checkBoxes.add(checkBox);
-//        }
-//        return checkBoxes;
-//    }
+    public ObservableList<CheckBox> initCourseCheckBoxes() {
+        ObservableList<CheckBox> checkBoxes = FXCollections
+                                                        .observableArrayList();
+        ArrayList<String> courses = new ArrayList<>(
+                                    activeSisu.getAllSubCourses().keySet());
+        for (var course : courses) {
+            CheckBox checkBox = new CheckBox(course);
+            checkBox.setOnAction(new EventHandler<>(){
+                @Override
+                public void handle(ActionEvent t) {
+                    String courseStr = checkBox.getText();
+                    TreeMap<String, Course> courses = 
+                                        activeSisu.getAllSubCourses();
+                    if (checkBox.isSelected()) {
+                        if (courses.containsKey(courseStr)) {
+                            activeSisu.getActiveStudent().
+                                        completeCourse(courses.get(courseStr));
+                        }
+                    }
+                    else {
+                        activeSisu.getActiveStudent().
+                                           removeCourse(courses.get(courseStr));
+                    }
+                }
+            });
+            checkBoxes.add(checkBox);
+        }
+        return checkBoxes;
+    }
     
     private void populateTreeView(TreeView treeView, Module module) throws IOException {
         TreeItem<String> root = new TreeItem<>("Root Node");

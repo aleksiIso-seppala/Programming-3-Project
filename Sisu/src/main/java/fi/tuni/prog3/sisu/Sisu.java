@@ -21,6 +21,8 @@ public class Sisu {
     private ArrayList<Student> savedStudents;
     private TreeMap<String, Degree> degrees;
     private Degree selectedDegree;
+    private boolean isSuccessfullySaved;
+    private TreeMap<String,Course> allSubCourses;
     //private TreeMap<String, Module> modules;
     
 
@@ -40,19 +42,37 @@ public class Sisu {
                 break;
         }
         this.savedStudents = JSONHandler.readAllStudentData();
+        boolean isInSavedStudents = false;
+        int studentIndex = 0;
         for ( Student savedStudent : this.savedStudents){
             if(savedStudent.getStudentNr().equals(this.activeStudent.getStudentNr())){
-                this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
-                this.activeStudent.setActiveStudyField(savedStudent.getActiveStudyField());
-                this.activeStudent.setCompletions(savedStudent.getCompletions());
-                this.savedStudents.remove(savedStudent);
-                this.savedStudents.add(this.activeStudent);
+                isInSavedStudents = true;
+                studentIndex = this.savedStudents.indexOf(savedStudent);
+//                this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
+//                this.activeStudent.setActiveStudyField(savedStudent.getActiveStudyField());
+//                this.activeStudent.setCompletions(savedStudent.getCompletions());
+//                this.savedStudents.remove(savedStudent);
+//                this.savedStudents.add(this.activeStudent);
             }
+//            else {
+//                isInSavedStudents = false;
+//                this.savedStudents.add(this.activeStudent);
+//            }
         }
+        if (isInSavedStudents) {
+            Student savedStudent = this.savedStudents.get(studentIndex);
+            this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
+            this.activeStudent.setActiveStudyField(savedStudent.getActiveStudyField());
+            this.activeStudent.setCompletions(savedStudent.getCompletions());
+            this.savedStudents.remove(savedStudent);
+        }
+        this.savedStudents.add(this.activeStudent);
 
         // TODO: Haetaan tiedot tutkinto-ohjelmista, luodaan ne ja talletetaan
         //       this.degrees
         this.degrees = JSONHandler.readDegrees();
+        
+        this.allSubCourses = new TreeMap<>();
     }
     
     public Student getActiveStudent() {
@@ -63,13 +83,13 @@ public class Sisu {
         return new ArrayList<>(this.degrees.keySet());
     }
     
-    public boolean saveStudentData() throws IOException {
+    public void saveStudentData() throws IOException {
         
         try{
             JSONHandler.writeAllStudentData(this.savedStudents);
-            return true;
+            this.isSuccessfullySaved = true;
         } catch(IOException ex){
-            return false;
+            this.isSuccessfullySaved = false;
         }
     }
     
@@ -104,38 +124,24 @@ public class Sisu {
             moduleTi.getChildren().add(getModuleContent(subModule.getValue()));
         }
         for (String course : module.getCourses().keySet()) {
-            TreeItem<String> courseTi = new TreeItem<>(course.toString());
+            TreeItem<String> courseTi = new TreeItem<>(course);
+//            this.selectedDegree.getSelectedField().
+//                            addToAllSubCourses(module.getCourses().get(course));
             moduleTi.getChildren().add(courseTi);
+            this.addToAllSubCourses(module.getCourses().get(course));
         }
         return moduleTi;
     }
-
-//    //Tämä metodi on vain ohjelman testaamista varten kunnes API saadaan käyttöön.
-//    public void initForTests() {
-//        /*Course course1 = new Course(5, new ArrayList<Degree>(), "Kurssi 1", "AAA-001");
-//        Course course2 = new Course(5, new ArrayList<Degree>(), "Kurssi 2", "BBB-002");
-//        Course course3 = new Course(5, new ArrayList<Degree>(), "Kurssi 3", "CCC-003");
-//        Course course4 = new Course(5, new ArrayList<Degree>(), "Kurssi 4", "DDD-004");
-//        Course course5 = new Course(5, new ArrayList<Degree>(), "Kurssi 5", "EEE-005");
-//        Course course6 = new Course(5, new ArrayList<Degree>(), "Kurssi 6", "FFF-006");
-//        Course course7 = new Course(5, new ArrayList<Degree>(), "Kurssi 7", "GGG-007");
-//        Course course8 = new Course(5, new ArrayList<Degree>(), "Kurssi 8", "HHH-008");
-//        Course course9 = new Course(5, new ArrayList<Degree>(), "Kurssi 9", "III-009");
-//        
-//        ArrayList<Course> courses1_3 = new ArrayList<>();
-//        courses1_3.add(course1);
-//        courses1_3.add(course2);
-//        courses1_3.add(course3);
-//        
-//        ArrayList<Course> courses4_6 = new ArrayList<>();
-//        courses1_3.add(course4);
-//        courses1_3.add(course5);
-//        courses1_3.add(course6);
-//        
-//        ArrayList<Course> courses7_9 = new ArrayList<>();
-//        courses1_3.add(course7);
-//        courses1_3.add(course8);
-//        courses1_3.add(course9);*/
-//    }
-//    
+    
+    public boolean getIsSuccessfullySaved() {
+        return this.isSuccessfullySaved;
+    }
+    
+    public TreeMap<String,Course> getAllSubCourses() {
+        return this.allSubCourses;
+    }
+    
+    public void addToAllSubCourses(Course course) {
+        this.allSubCourses.put(course.getName(), course);
+    }
 }

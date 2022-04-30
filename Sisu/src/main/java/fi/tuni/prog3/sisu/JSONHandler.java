@@ -324,7 +324,9 @@ public class JSONHandler {
             for(var course : completions){
                 String courseId = course.getAsString();
                 Course courseClass = readCourse(courseId);
-                student.completeCourse(courseClass);
+                if (courseClass != null) {
+                    student.completeCourse(courseClass);
+                }
             }
             students.add(student);
         }
