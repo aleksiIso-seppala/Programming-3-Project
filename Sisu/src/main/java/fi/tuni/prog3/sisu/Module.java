@@ -17,6 +17,7 @@ public class Module {
     private String name;
     private String id;
     private int credits;
+    private int accCredits;
     
     
     public Module(TreeMap<String,Course> courses,
@@ -67,5 +68,13 @@ public class Module {
 
     public TreeMap<String,Module> getModules() {
         return this.modules;
+    }
+    
+    public int getAccCredits() {
+        return this.accCredits;
+    }
+    
+    public void setAccCredits(int credits) {
+        this.accCredits = credits;
     }
 }
