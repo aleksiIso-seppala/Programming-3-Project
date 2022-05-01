@@ -144,4 +144,8 @@ public class Sisu {
     public void addToAllSubCourses(Course course) {
         this.allSubCourses.put(course.getName(), course);
     }
+    
+    public void clearAllSubCourses() {
+        this.allSubCourses.clear();
+    }
 }

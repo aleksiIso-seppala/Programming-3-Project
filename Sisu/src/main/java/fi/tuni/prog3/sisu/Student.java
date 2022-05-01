@@ -94,4 +94,8 @@ public class Student {
     public String toString() {
         return this.studentName;
     }
+    
+    public void clearCompletions() {
+        this.completions.clear();
+    }
 }
