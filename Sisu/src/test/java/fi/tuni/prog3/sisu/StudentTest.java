@@ -103,8 +103,8 @@ public class StudentTest {
     public void testSetAndGetActiveStudyField() {
         
         Student testStudent1 = new Student("Matti", "001");
-        ArrayList<Course> testCourseList = new ArrayList<>();
-        StudyField testStudyField = new StudyField(testCourseList,"A","1");
+        TreeMap<String,Course> testCourseMap = new TreeMap<>();
+        Module testStudyField = new Module(testCourseMap,"A","1",180);
         testStudent1.setActiveStudyField(testStudyField);
         String expResult = testStudyField.getId();
         String result = testStudent1.getActiveStudyField().getId();
@@ -132,10 +132,9 @@ public class StudentTest {
         testStudent1.completeCourse(course);
         TreeMap completions = testStudent1.getCompletions();
         boolean result = completions.containsKey(course);
-        assertEquals(expResult,result);
-        //????
-        
+        assertEquals(expResult,result);  
     }
+    
     @ParameterizedTest
     @MethodSource("courseProvider")
     @DisplayName("Testing removeCourse")
