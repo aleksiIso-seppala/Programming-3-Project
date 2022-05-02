@@ -154,12 +154,12 @@ public class Degree {
    }
    
    /**
-     * Palauttaa tutkinto-ohjelman tilan nimen muodossa.
-     * @return nimi
+     * Palauttaa tutkinto-ohjelman tilan nimen  ja opintopisteiden muodossa.
+     * @return [nimi] [opintopisteet]op
      */
    @Override
     public String toString() {
-        return this.name;
+        return this.name + " " + this.studyPoints + "op";
     }
     
     /**
