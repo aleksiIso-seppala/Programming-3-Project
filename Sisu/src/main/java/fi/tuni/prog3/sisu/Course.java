@@ -6,7 +6,7 @@ package fi.tuni.prog3.sisu;
  * @author Lauri Kalliojärvi
  */
 
-public class Course implements Comparable<Course>{
+public class Course {
     
     /**
      * Kurssin laajuus opintopisteinä.

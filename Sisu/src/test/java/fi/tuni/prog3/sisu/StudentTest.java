@@ -160,7 +160,7 @@ public class StudentTest {
         TreeMap<String, Course> toComplete = new TreeMap<>();
         toComplete.put(course1.getName(),course1);
         testStudent1.setCompletions(toComplete);
-        testStudent1.removeCourse(course1);
+        testStudent1.removeCourse(course1.getName());
         boolean expResult = false;
         boolean result = testStudent1
                 .getCompletions()
