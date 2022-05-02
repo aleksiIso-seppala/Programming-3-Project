@@ -324,7 +324,9 @@ public class JSONHandler {
             for(var course : completions){
                 String courseId = course.getAsString();
                 Course courseClass = readCourse(courseId);
-                student.completeCourse(courseClass);
+                if (courseClass != null) {
+                    student.completeCourse(courseClass);
+                }
             }
             students.add(student);
         }
@@ -332,6 +334,7 @@ public class JSONHandler {
         return students;
         
     }
+    
     
     public static void main(String args[]) throws IOException {
         readDegrees();

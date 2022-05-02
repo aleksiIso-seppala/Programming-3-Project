@@ -1,9 +1,8 @@
 package fi.tuni.prog3.sisu;
 
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -12,9 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -26,41 +22,74 @@ import javafx.scene.control.DialogEvent;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 /**
- *
+ * Sisu-ohjelman graafinen käyttöliittymä.
  * @author Lauri Puoskari
  */
 public class SisuGUI extends Application {
-
+    /**
+     * Grid-layoutissa olevien elementtien välin pituus korkeussuunnassa.
+     */
     private final static int VGAP = 10;
+    /**
+     * Grid-layoutissa olevien elementtien välin pituus leveyssuunnassa.
+     */
     private final static int HGAP = 30;
+    /**
+     * Lyhyiden painikkeiden ja tekstikenttien leveys.
+     */
     private final static int SHORT_FIELD_WIDTH = 150;
+    /**
+     * Pitkien painikkeiden ja tekstikenttien leveys.
+     */
     private final static int LONG_FIELD_WIDTH = 330;
+    /**
+     * Opiskelijan tiedot -näkymän ikkunan leveys.
+     */
     private final static int INFO_WINDOW_WIDTH = 400;
+    /**
+     * Opiskelijan tiedot -näkymän ikkunan korkeus.
+     */
     private final static int INFO_WINDOW_HEIGHT = 300;
+    /**
+     * Opintojen rakenne -näkymän ikkunan leveys.
+     */
     private final static int STUDY_VIEW_WINDOW_WIDTH = 800;
+    /**
+     * Opintojen rakenne -näkymän ikkunan korkeus.
+     */
     private final static int STUDY_VIEW_WINDOW_HEIGHT = 650;
-    private final static int STUDY_VIEW_WINDOW_X = 250;
+    /**
+     * Opintojen rakenne -näkymän ikkunan sijainti korkeussuunnassa.
+     */
     private final static int STUDY_VIEW_WINDOW_Y = 0;
-    private final static int COURSE_LIST_HEIGHT = 400;
+    /**
+     * Opintojen rakenne -näkymän opintorakennekentän korkeus.
+     */
+    private final static int STUDY_STRUCTURE_VIEW_HEIGHT = 400;
+    /**
+     * Opintojen rakenne -näkymän Suoritukset -kentän korkeus.
+     */
     private final static int COMPLETED_LIST_HEIGHT = 435;
+    /**
+     * Käynnissä oleva Sisu-ohjelma.
+     */
     private static Sisu activeSisu;
     
+    /**
+     * Käynnistää ohjelman toteutuksen aloittaen Opiskelijan tiedot -näkymästä.
+     * @param stage Käytössä oleva stage.
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("SISU");
@@ -73,7 +102,7 @@ public class SisuGUI extends Application {
         grid.setHgap(HGAP);
         grid.setVgap(VGAP);
         
-        Label studentNameLabel = new Label("Opiskelijan nimi *");
+        Label studentNameLabel = new Label("Opiskelijan nimi (A-Z) *");
         grid.add(studentNameLabel, 1, 1);
         TextField studentNameField = new TextField();
         studentNameField.setMaxWidth(LONG_FIELD_WIDTH);
@@ -150,7 +179,8 @@ public class SisuGUI extends Application {
                             }
                             else {
                                 try {
-                                    activeSisu = new Sisu(studentNameField.getText(), 
+                                    activeSisu = new Sisu(
+                                            studentNameField.getText(), 
                                             studentNrField.getText(),
                                             startYearField.getText(),
                                             finYearField.getText());
@@ -168,6 +198,12 @@ public class SisuGUI extends Application {
         });
     }
     
+    /**
+     * Käynnistää Opintojen rakenne -näkymän.
+     * @param stage Käytössä oleva stage.
+     * @param scene Käytössä oleva scene.
+     * @param tabPane Käytössä oleva välilehtiruutu.
+     */
     public void startStudyView(Stage stage, Scene scene, TabPane tabPane)
     {   
         double studyViewWindowX = scene.getWindow().getX() - 
@@ -204,7 +240,7 @@ public class SisuGUI extends Application {
         
         TreeView courseTreeView = new TreeView();
         studyViewGrid.add(courseTreeView, 1, 4, 2, 1);
-        courseTreeView.setPrefHeight(COURSE_LIST_HEIGHT);
+        courseTreeView.setPrefHeight(STUDY_STRUCTURE_VIEW_HEIGHT);
         
         Button confirmButton = new Button("Vahvista valinnat");
         confirmButton.setPrefWidth(SHORT_FIELD_WIDTH);
@@ -215,9 +251,9 @@ public class SisuGUI extends Application {
         completionsTitle.setPrefWidth(SHORT_FIELD_WIDTH);
         studyViewGrid.add(completionsTitle, 4, 2, 1, 1);
         
-        ListView completionsCblc = new ListView(/*initCourseCheckBoxes()*/);
-        completionsCblc.setPrefSize(LONG_FIELD_WIDTH, COMPLETED_LIST_HEIGHT);
-        studyViewGrid.add(completionsCblc, 4, 3, 2, 2);
+        ListView completionsView = new ListView();
+        completionsView.setPrefSize(LONG_FIELD_WIDTH, COMPLETED_LIST_HEIGHT);
+        studyViewGrid.add(completionsView, 4, 3, 2, 2);
         
         Button saveButton = new Button("Tallenna ja sulje");
         saveButton.setPrefWidth(SHORT_FIELD_WIDTH);
@@ -232,19 +268,10 @@ public class SisuGUI extends Application {
         degreeChoiceBox.setOnHidden(new EventHandler<>(){
             @Override
             public void handle(Event t) {
-                if (courseTreeView.getRoot() != null) {
-                    if (!courseTreeView.getRoot().getChildren().isEmpty()) {
-                        for (int i = 0; i < courseTreeView.getRoot().
-                                                getChildren().size() ; i++) {
-                            courseTreeView.getRoot().getChildren().remove(i);
-                        }
-                    }
+                if (!fieldChoiceBox.getItems().isEmpty()) {
+                    fieldChoiceBox.getSelectionModel().clearSelection();
+                    fieldChoiceBox.getItems().clear();
                 }
-                
-                TreeItem<String> root = new TreeItem<>("Root Node");
-                courseTreeView.setShowRoot(false);
-                courseTreeView.setRoot(root);
-                
                 if (degreeChoiceBox.getSelectionModel().getSelectedItem() != null) {
                     String selectedDegree = (String) degreeChoiceBox.
                                         getSelectionModel().getSelectedItem();
@@ -252,39 +279,91 @@ public class SisuGUI extends Application {
                     try {
                         activeSisu.setModules();
                     } catch (IOException ex) {
-                        Logger.getLogger(SisuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SisuGUI.class.getName()).log(
+                                                        Level.SEVERE, null, ex);
                     }
-                    root.setExpanded(true);
-                    for (int i = 0; i < activeSisu.getModules().size(); i++) {
-                        TreeItem module = new TreeItem<>(activeSisu.getModules().get(i));
-                        root.getChildren().add(module);
+                    if (activeSisu.getSelectedDegree().getStudyFields().
+                                                                    isEmpty()) {
+                        try {
+                            for (String module : activeSisu.getSelectedDegree().
+                                                        getModules().keySet()) {
+                                populateTreeView(courseTreeView, 
+                                    activeSisu.getSelectedDegree().getModules().
+                                    get(module));   
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(SisuGUI.class.getName()).log(
+                                                        Level.SEVERE, null, ex);
+                        }
+                    }
+                    else {
+                        ObservableList<String> studyFields = FXCollections.
+                            observableArrayList(activeSisu.getSelectedDegree().
+                            getStudyFields().keySet());
+                        fieldChoiceBox.getItems().addAll(studyFields);
+                    }
+                }
+
+            }
+        });
+        
+        fieldChoiceBox.setOnHidden(new EventHandler<>(){
+            @Override
+            public void handle(Event t) {
+                if (fieldChoiceBox.getSelectionModel().getSelectedItem() != null) {
+                    String selectedField = (String) fieldChoiceBox.
+                                        getSelectionModel().getSelectedItem();
+                    activeSisu.getSelectedDegree().setSelectedField(selectedField);
+                    try {
+                        activeSisu.setModules();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(
+                                                        Level.SEVERE, null, ex);
+                    }
+                    try {
+                        populateTreeView(courseTreeView, 
+                                activeSisu.getSelectedDegree().getStudyFields().
+                                get((String) fieldChoiceBox.getSelectionModel().
+                                getSelectedItem()));
+                    } catch (IOException ex) {
+                        Logger.getLogger(SisuGUI.class.getName()).log(
+                                                        Level.SEVERE, null, ex);
                     }
                 }
             }
-            
         });
         
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                // TODO: Vahvista valinnat ja anna ne Sisu-luokalle.
-                
-//                activeSisu.getStudent().setDegree();
-//                activeSisu.getStudent().setStudyField();
+                activeSisu.getActiveStudent().setActiveDegree(
+                                                activeSisu.getSelectedDegree());
+                activeSisu.getActiveStudent().setActiveStudyField(
+                            activeSisu.getSelectedDegree().getSelectedField());
+                if (!completionsView.getItems().isEmpty()) {
+                    completionsView.getSelectionModel().clearSelection();
+                    completionsView.getItems().clear();
+                }
+                completionsView.getItems().addAll(initCourseCheckBoxes());
             }
         });
         
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                boolean isSuccesfullySaved = activeSisu.saveStudentData();
+                try {
+                    activeSisu.saveStudentData();
+                } catch (IOException ex) {
+                    Logger.getLogger(SisuGUI.class.getName()).log(
+                                                        Level.SEVERE, null, ex);
+                }
                 Dialog saveDialog = new Dialog();
                 saveDialog.setTitle("HUOM!");
                 DialogPane dialogPane = new DialogPane();
                 dialogPane.getButtonTypes().add(
                             new ButtonType("OK", 
                                     ButtonBar.ButtonData.OK_DONE));
-                if (isSuccesfullySaved) {
+                if (activeSisu.getIsSuccessfullySaved()) {
                     dialogPane.setHeaderText("Tietojen tallennus onnistui.");
                 }
                 else {
@@ -297,7 +376,7 @@ public class SisuGUI extends Application {
                 saveDialog.setOnCloseRequest(new EventHandler<DialogEvent>() {
                     @Override
                     public void handle(DialogEvent t) {
-                        if (isSuccesfullySaved) {
+                        if (activeSisu.getIsSuccessfullySaved()) {
                             closeTab(studyViewTab);
                             stage.close();
                         }
@@ -307,18 +386,70 @@ public class SisuGUI extends Application {
         });
     }
     
+    /**
+     * Luo kurssit ja niitä vastaavat checkboxit Suoritukset-kenttään.
+     * @return ObservableList luoduista checkboxeista.
+     */
     public ObservableList<CheckBox> initCourseCheckBoxes() {
+        if (!activeSisu.getSelectedDegree().equals(activeSisu.getActiveStudent().
+                getActiveDegree()) | !activeSisu.getSelectedDegree().
+                getSelectedField().equals(activeSisu.getActiveStudent().
+                getActiveStudyField())) {
+            activeSisu.getActiveStudent().clearCompletions();
+        }
+        activeSisu.getActiveStudent().clearCompletions();
         ObservableList<CheckBox> checkBoxes = FXCollections
                                                         .observableArrayList();
-        ArrayList<Course> courses = activeSisu.getActiveStudent().getActiveDegree()
-                                                        .getCourses();
+        ArrayList<String> courses = new ArrayList<>(
+                                    activeSisu.getAllSubCourses().keySet());
         for (var course : courses) {
-            CheckBox checkBox = new CheckBox(course.toString());
+            CheckBox checkBox = new CheckBox(course);
+            checkBox.setOnAction(new EventHandler<>(){
+                @Override
+                public void handle(ActionEvent t) {
+                    String courseStr = checkBox.getText();
+                    TreeMap<String, Course> courses = 
+                                        activeSisu.getAllSubCourses();
+                    if (checkBox.isSelected()) {
+                        if (courses.containsKey(courseStr)) {
+                            activeSisu.getActiveStudent().
+                                        completeCourse(courses.get(courseStr));
+                        }
+                    }
+                    else {
+                        activeSisu.getActiveStudent().
+                                           removeCourse(courses.get(courseStr));
+                    }
+                }
+            });
             checkBoxes.add(checkBox);
         }
         return checkBoxes;
     }
     
+    /**
+     * Luo tutkinto-ohjelman rakenteen opintorakennekenttään.
+     * @param treeView Opintorakennekenttä.
+     * @param module Module, jonka pohjalta puurakenne luodaan.
+     * @throws IOException 
+     */
+    private void populateTreeView(TreeView treeView, Module module) 
+                                                            throws IOException {
+        activeSisu.clearAllSubCourses();
+        TreeItem<String> root = new TreeItem<>(
+                                    activeSisu.getSelectedDegree().getName());
+        treeView.setRoot(root);
+        if (!treeView.getRoot().getChildren().isEmpty()) {
+            treeView.getRoot().getChildren().clear();
+        }
+        TreeItem<String> content = activeSisu.getModuleContent(module);
+        root.getChildren().add(content);
+    }
+    
+    /**
+     * Sulkee välilehden.
+     * @param tab Suljettava välilehti.
+     */
     private void closeTab(Tab tab) {
         EventHandler<Event> handler = tab.getOnClosed();
         if (null != handler) {
