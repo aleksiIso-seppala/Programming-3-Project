@@ -187,7 +187,7 @@ public class Student {
      * @param removedCourse poistettava kurssi Course-oliona
      */
     public void removeCourse(Course removedCourse) {
-        this.completions.remove(removedCourse);
+        this.completions.remove(removedCourse.getName());
     }
     
     /**
