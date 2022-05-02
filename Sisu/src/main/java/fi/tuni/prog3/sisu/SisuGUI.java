@@ -107,7 +107,7 @@ public class SisuGUI extends Application {
         TextField studentNameField = new TextField();
         studentNameField.setMaxWidth(LONG_FIELD_WIDTH);
         grid.add(studentNameField, 1, 2, 2, 1);
-        Label studentNrLabel = new Label("Opiskelijanumero *");
+        Label studentNrLabel = new Label("Opiskelijanumero (A-Z, 0-9)*");
         grid.add(studentNrLabel, 1, 3);
         TextField studentNrField = new TextField();
         studentNrField.setMaxWidth(LONG_FIELD_WIDTH);
@@ -230,8 +230,9 @@ public class SisuGUI extends Application {
         studyViewGrid.setVgap(VGAP);
         studyViewGrid.setHgap(HGAP);
         
-        Label titleLabel = new Label("Opintojen rakenne - " 
-                + activeSisu.getActiveStudent().getName());
+        String titleLabelStr = "Opintojen rakenne - "
+                                + activeSisu.getActiveStudent().getName();
+        Label titleLabel = new Label(titleLabelStr);
         titleLabel.setFont(new Font(20));
         studyViewGrid.add(titleLabel, 1, 1, 5, 1);
         
@@ -279,9 +280,7 @@ public class SisuGUI extends Application {
         scene.getWindow().setY(STUDY_VIEW_WINDOW_Y);
         
         if (activeSisu.getIsStudentFound()) {
-            System.out.println("Student found");
             if (activeSisu.getActiveStudent().getActiveDegree() != null) {
-                System.out.println("Degree != null");
                 degreeChoiceBox.getSelectionModel().select(
                     activeSisu.getActiveStudent().getActiveDegree().getName());
                 if (activeSisu.getActiveStudent().getActiveStudyField() != null) {
@@ -324,7 +323,6 @@ public class SisuGUI extends Application {
                     activeSisu.setSelectedDegree(selectedDegree);
                     try {
                         activeSisu.initModules();
-//                        activeSisu.getSelectedDegree().addToAllSubCourses();
                     } catch (IOException ex) {
                         Logger.getLogger(SisuGUI.class.getName()).log(
                                                         Level.SEVERE, null, ex);
@@ -367,7 +365,6 @@ public class SisuGUI extends Application {
                     activeSisu.getSelectedDegree().setSelectedField(selectedField);
                     try {
                         activeSisu.initModules();
-//                        activeSisu.getSelectedDegree().addToAllSubCourses();
                     } catch (IOException ex) {
                         Logger.getLogger(SisuGUI.class.getName()).log(
                                                         Level.SEVERE, null, ex);
@@ -388,19 +385,6 @@ public class SisuGUI extends Application {
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-//                if (activeSisu.getSelectedDegree() != null) {
-//                    if (activeSisu.getSelectedDegree() != activeSisu.
-//                                        getActiveStudent().getActiveDegree()) {
-//                        activeSisu.clearCoursesInCompletionsView();
-//                    }
-//                    else if (activeSisu.getSelectedDegree().getSelectedField()
-//                                                                    != null) {
-//                        if (activeSisu.getSelectedDegree().getSelectedField() !=
-//                                activeSisu.getActiveStudent().getActiveStudyField()) {
-//                            activeSisu.clearCoursesInCompletionsView();
-//                        }
-//                    }
-//                }
                 activeSisu.getActiveStudent().setActiveDegree(
                                                 activeSisu.getSelectedDegree());
                 activeSisu.getActiveStudent().setActiveStudyField(
@@ -409,8 +393,6 @@ public class SisuGUI extends Application {
                     completionsView.getSelectionModel().clearSelection();
                     completionsView.getItems().clear();
                 }
-//                completionsView.getSelectionModel().clearSelection();
-//                completionsView.getItems().clear();
                 completionsView.getItems().addAll(initCourseCheckBoxes());
             }
         });
@@ -464,8 +446,8 @@ public class SisuGUI extends Application {
                 hasStudyField = true;
             }
         }
-        if (!activeSisu.getSelectedDegree().equals(activeSisu.getActiveStudent().
-                getActiveDegree())) {
+        if (!activeSisu.getSelectedDegree().getId().equals(activeSisu.getActiveStudent().
+                getActiveDegree().getId())) {
             if (hasStudyField) {
                 if (!activeSisu.getSelectedDegree().
                 getSelectedField().equals(activeSisu.getActiveStudent().
@@ -474,8 +456,13 @@ public class SisuGUI extends Application {
                 }
             }
         }
-        
-//        activeSisu.getActiveStudent().clearCompletions();
+        else if (hasStudyField) {
+            if (!activeSisu.getSelectedDegree().getSelectedField().getId().
+                    equals(activeSisu.getActiveStudent().getActiveStudyField().
+                            getId())) {
+                activeSisu.getActiveStudent().clearCompletions();
+            }
+        }
         ObservableList<CheckBox> checkBoxes = FXCollections
                                                         .observableArrayList();
         ArrayList<String> courses = new ArrayList<>(
@@ -524,46 +511,16 @@ public class SisuGUI extends Application {
      */
     private void populateTreeView(TreeView treeView, Module module) 
                                                             throws IOException {
-//        if (activeSisu.getSelectedDegree() != null) {
-//                    if (activeSisu.getSelectedDegree() != activeSisu.
-//                                        getActiveStudent().getActiveDegree()) {
-//                        activeSisu.clearCoursesInCompletionsView();
-//                    }
-//                    else if (activeSisu.getSelectedDegree().getSelectedField()
-//                                                                    != null) {
-//                        if (activeSisu.getSelectedDegree().getSelectedField() !=
-//                                activeSisu.getActiveStudent().getActiveStudyField()) {
-//                            activeSisu.clearCoursesInCompletionsView();
-//                        }
-//                    }
-//                }
         if (treeView.getRoot() == null) {
             TreeItem<String> root = new TreeItem<>(
-                                    activeSisu.getSelectedDegree().getName());
+                                    activeSisu.getSelectedDegree().toString());
             treeView.setRoot(root);
         }
         else if (!treeView.getRoot().getValue().equals(
                                 activeSisu.getSelectedDegree().toString())) {
             treeView.getRoot().setValue(activeSisu.getSelectedDegree().toString());
         }
-//        if (!treeView.getRoot().getChildren().isEmpty()) {
-//            treeView.getRoot().getChildren().clear();
-//        }
         TreeItem<String> content = activeSisu.getModuleContent(module);
         treeView.getRoot().getChildren().add(content);
     }
-    
-//    /**
-//     * Sulkee välilehden.
-//     * @param tab Suljettava välilehti.
-//     */
-//    private void closeTab(Tab tab) {
-//        EventHandler<Event> handler = tab.getOnClosed();
-//        if (null != handler) {
-//            handler.handle(null);
-//        } else {
-//            tab.getTabPane().getTabs().remove(tab);
-//        }
-//    }
-    
 }

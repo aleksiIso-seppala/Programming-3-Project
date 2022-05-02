@@ -355,7 +355,6 @@ public class JSONHandler {
             
             
             if(element.get("activeDegree") != null){
-                System.out.println(element.get("activeDegree").getAsString());
                 String activeDegree = element.get("activeDegree").getAsString();
                 Degree selectedDegree = null;
                 for(var degree : degrees.entrySet()){

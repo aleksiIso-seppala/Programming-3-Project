@@ -75,9 +75,7 @@ public class Sisu {
         }
         if (this.isStudentFound) {
             Student savedStudent = this.savedStudents.get(studentIndex);
-            System.out.println(savedStudent.getActiveDegree());
             if (savedStudent.getActiveDegree() != null) {
-                System.out.println(savedStudent.getActiveDegree());
                 this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
                 this.selectedDegree = savedStudent.getActiveDegree();
             }
@@ -171,7 +169,7 @@ public class Sisu {
      * @throws IOException 
      */
     public TreeItem<String> getModuleContent(Module module) throws IOException {
-        TreeItem<String> moduleTi = new TreeItem<>(module.getName());
+        TreeItem<String> moduleTi = new TreeItem<>(module.toString());
         for (var subModule : module.getModules().entrySet()) {
             moduleTi.getChildren().add(getModuleContent(subModule.getValue()));
         }
