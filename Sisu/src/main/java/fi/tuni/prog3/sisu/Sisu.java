@@ -63,19 +63,21 @@ public class Sisu {
             default:
                 break;
         }
-        this.savedStudents = JSONHandler.readAllStudentData();
+        this.degrees = JSONHandler.readDegrees();
+        this.savedStudents = JSONHandler.readAllStudentData(this.degrees);
         this.isStudentFound = false;
         int studentIndex = 0;
         for (Student savedStudent : this.savedStudents){
             if(savedStudent.getStudentNr().equals(this.activeStudent.getStudentNr())){
                 this.isStudentFound = true;
                 studentIndex = this.savedStudents.indexOf(savedStudent);
-                System.out.println("Student is found");
             }
         }
         if (this.isStudentFound) {
             Student savedStudent = this.savedStudents.get(studentIndex);
+            System.out.println(savedStudent.getActiveDegree());
             if (savedStudent.getActiveDegree() != null) {
+                System.out.println(savedStudent.getActiveDegree());
                 this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
                 this.selectedDegree = savedStudent.getActiveDegree();
             }
@@ -89,7 +91,6 @@ public class Sisu {
             this.savedStudents.remove(savedStudent);
         }
         this.savedStudents.add(this.activeStudent);
-        this.degrees = JSONHandler.readDegrees();
         this.coursesInCompletionsView = new TreeMap<>();
     }
     
