@@ -3,19 +3,25 @@
     "studentName": "Matti",
     "studentNr": "007",
     "startingYear": "2015",
-    "completions": [
-      "tut-1",
-      "tut-3",
-      "tut-2"
-    ]
+    "completions": []
   },
   {
     "studentName": "Maija",
     "studentNr": "1",
-    "completions": [
-      "tut-5",
-      "tut-4",
-      "tut-6"
-    ]
+    "completions": []
+  },
+  {
+    "studentName": "Aleksi Iso",
+    "studentNr": "H2921465",
+    "startingYear": "2017",
+    "finishingYear": "2017",
+    "completions": []
+  },
+  {
+    "studentName": "asd",
+    "studentNr": "asd",
+    "activeDegree": "Arkkitehtuurin kandidaattiohjelma",
+    "activeStudyField": "Arkkitehtuurin kandidaattiohjelman yhteiset opinnot",
+    "completions": []
   }
 ]

@@ -1,7 +1,6 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -16,7 +15,7 @@ public class Module {
     private Degree degree;
     private String name;
     private String id;
-    private int credits;
+    private int minCredits;
     private int accCredits;
     
     
@@ -25,12 +24,12 @@ public class Module {
             String id, 
             int credits) {
         
-        this.credits = credits;
+        this.minCredits = credits;
         this.courses = courses;
-        this.degree = degree;
         this.name = name;
         this.id = id;
         this.modules = new TreeMap<>();
+        this.degree = null;
     }
     
     public TreeMap<String,Course> getCourses() {
@@ -49,6 +48,10 @@ public class Module {
         return this.id;
     }
     
+    public int getMinCredits() {
+        return this.minCredits;
+    }
+    
     public void setDegree(Degree degreeToSet) {
         this.degree = degreeToSet;
     }
@@ -63,7 +66,7 @@ public class Module {
     
     @Override
     public String toString() {
-        return this.name;
+        return this.name + " " + this.accCredits + "/" + this.minCredits;
     }
 
     public TreeMap<String,Module> getModules() {
