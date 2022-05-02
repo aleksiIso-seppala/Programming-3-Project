@@ -328,9 +328,13 @@ public class JSONHandler {
         Gson gson = new Gson();
         Reader reader = Files.newBufferedReader(Paths.get(STUDENT_FILE));
         JsonArray response = gson.fromJson(reader, JsonArray.class);
-        
+            
         
         ArrayList<Student> students = new ArrayList<>();
+        
+        if(response == null){
+            return students;
+        }
         
         for(var data : response){
             JsonObject element = (JsonObject) data;
@@ -351,6 +355,7 @@ public class JSONHandler {
             
             
             if(element.get("activeDegree") != null){
+                System.out.println(element.get("activeDegree").getAsString());
                 String activeDegree = element.get("activeDegree").getAsString();
                 Degree selectedDegree = null;
                 for(var degree : degrees.entrySet()){
