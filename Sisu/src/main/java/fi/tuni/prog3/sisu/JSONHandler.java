@@ -298,11 +298,11 @@ public class JSONHandler {
             user.addProperty("startingYear",student.getStartingYear());
             user.addProperty("finishingYear",student.getFinishingYear());
             if(student.getActiveDegree() != null){
-                user.addProperty("activeDegree",student.getActiveDegree().getName());  
+                user.addProperty("activeDegree",student.getActiveDegree().getId());  
             }
 
             if(student.getActiveStudyField() != null){
-                user.addProperty("activeStudyField",student.getActiveStudyField().getName());  
+                user.addProperty("activeStudyField",student.getActiveStudyField().getId());  
             }
             JsonArray completions = new JsonArray();
 
@@ -352,14 +352,26 @@ public class JSONHandler {
             
             if(element.get("activeDegree") != null){
                 String activeDegree = element.get("activeDegree").getAsString();
-                Degree degree = degrees.get(activeDegree);
-                readDegree(degree);
-                student.setActiveDegree(degree);
+                Degree selectedDegree = null;
+                for(var degree : degrees.entrySet()){
+                    if(degree.getValue().getId().equals(activeDegree)){
+                        selectedDegree = degree.getValue();
+                        break;
+                    }
+                }
+                readDegree(selectedDegree);
+                student.setActiveDegree(selectedDegree);
                 
                 if(element.get("activeStudyField") != null){
-                    String activeStudyField = element.get("activeStudyField").getAsString();                    
-                    Module studyField = degree.getStudyFields().get(activeStudyField);                   
-                    student.setActiveStudyField(studyField);
+                    String activeStudyField = element.get("activeStudyField").getAsString();
+                    Module selectedStudyField = null;
+                    for(var studyfield : selectedDegree.getStudyFields().entrySet()){
+                        if(studyfield.getValue().getId().equals(activeStudyField)){
+                            selectedStudyField = studyfield.getValue();
+                            break;
+                        }
+                    }                 
+                    student.setActiveStudyField(selectedStudyField);
                 } 
             }
             
