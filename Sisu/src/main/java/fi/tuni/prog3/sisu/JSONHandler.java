@@ -23,8 +23,8 @@ public class JSONHandler {
     /**
      * Käy läpi sisun tutkinto-ohjelmat.
      * @return Treemap, joka sisältää kaikki tutkinto-ohjelmat.
-     * @throws MalformedURLException
-     * @throws IOException 
+     * @throws MalformedURLException new URL ei toimi (virheellinen osoite)
+     * @throws IOException virheellinen new URL ei toimi (virheellinen osoite)
      */    
     public static TreeMap<String, Degree> readDegrees() throws MalformedURLException, IOException{
         
@@ -61,8 +61,8 @@ public class JSONHandler {
     /**
      * lukee halutun tutkinto-ohjelman alaiset moduulit ja kurssit
      * @param selectedDegree valittu tutkinto-ohjelma
-     * @throws MalformedURLException
-     * @throws IOException 
+     * @throws MalformedURLException new URL ei toimi (virheellinen osoite)
+     * @throws IOException new URL ei toimi (virheellinen osoite)
      */
     public static void readDegree(Degree selectedDegree) throws MalformedURLException, IOException{
         
@@ -142,8 +142,8 @@ public class JSONHandler {
      * lukee modulin ja sen alimoduulit
      * @param groupId moduulin groupId, jolla se haetaan Sisusta.
      * @return palauttaa Moduulin luokkana.
-     * @throws MalformedURLException
-     * @throws IOException 
+     * @throws MalformedURLException new URL ei toimi (virheellinen osoite)
+     * @throws IOException new URL ei toimi (virheellinen osoite)
      */
     public static Module readModule(String groupId) throws MalformedURLException, IOException{
         
@@ -197,7 +197,7 @@ public class JSONHandler {
      * kunnes löydetään moduulin alimoduulit tai kurssit
      * @param array käsiteltävä lista.
      * @param module Moduuli, jonka alla käsiteltävä lista on
-     * @throws IOException 
+     * @throws IOException new URL ei toimi (virheellinen osoite)
      */
     public static void readArray(JsonArray array, Module module) throws IOException{
                 
@@ -244,8 +244,8 @@ public class JSONHandler {
      * Käy läpi kurssin tiedot Sisusta, ja luo sen pohjalta Course-olion.
      * @param courseId Kurssin Id, jonka avulla tiedot haetaan
      * @return Luotu kurssi-olio.
-     * @throws MalformedURLException
-     * @throws IOException 
+     * @throws MalformedURLException new URL ei toimi (virheellinen osoite)
+     * @throws IOException new URL ei toimi (virheellinen osoite)
      */
     public static Course readCourse(String courseId) throws MalformedURLException, IOException{
         
@@ -284,7 +284,7 @@ public class JSONHandler {
      * Kirjoittaa kaikki tallennetut opiskelijat JSON-tiedostoon opiskelijatietojen
      * tallennusta varten.
      * @param students Lista tallennettavista opiskelijoista
-     * @throws IOException 
+     * @throws IOException Tiedoston avaaminen ei onnistu
      */
     public static void writeAllStudentData(ArrayList<Student> students) throws IOException {
         
@@ -321,7 +321,7 @@ public class JSONHandler {
     /**
      * Lukee tallennetut opiskelijat JSON-tiedostosta. Tallentaa luetut opiskelijat olioina listaan.
      * @return Palauttaa listan opiskelija-olioista.
-     * @throws IOException 
+     * @throws IOException tiedoston avaaminen ei onnistu
      */
     public static ArrayList<Student> readAllStudentData(TreeMap<String, Degree> degrees) throws IOException {
         
