@@ -54,21 +54,4 @@ public class CourseTest {
         Course testCourse = new Course(studyPoints, name, id);
         assertEquals(name, testCourse.toString());
     }
-    
-    /**
-     * Testi, joka testaa Student-luokan vertailumetodin toimivuuden.
-     */
-    @Test
-    @DisplayName("Testing compareTo")
-    public void testCompareTo() {
-        String name = "Kurssi-1";
-        String id = "AAA-1";
-        int studyPoints = 5;
-        Course c = new Course(studyPoints, name, id);
-        Course compare = new Course(studyPoints, name, id);
-        int expResult = 0;
-        int result = c.compareTo(compare);
-        assertEquals(expResult, result);
-    }
-    
 }

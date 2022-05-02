@@ -1,15 +1,11 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.List;
 import java.util.TreeMap;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -91,10 +87,7 @@ public class DegreeTest {
         TreeMap<String, Module> resultStudyFields = testDegree.getStudyFields();
         boolean expStudyFieldResult = true;
         boolean studyFieldResult = resultStudyFields.equals(expStudyFields);
-        assertEquals(expStudyFieldResult, studyFieldResult);
-
-        
-        
+        assertEquals(expStudyFieldResult, studyFieldResult); 
     }
     
     /**
@@ -116,37 +109,21 @@ public class DegreeTest {
      * Testi, joka testaa valitun opintosuunnan tallentamisen sekä tulostamisen.
      * @Param fields opintosuunnat
      */
-    @ParameterizedTest
-    @MethodSource("fieldProvider")
+    @Test
     @DisplayName("Testing setSelectedField and getSelectedField")
-    public void testSetAndGetSelectedField(List<Module> fields) {
+    public void testSetAndGetSelectedField() {
         int points = 180;
         String name = "Degree-A";
         String id = "1111";
         Degree testDegree = new Degree(points, name, id);
-        testDegree.addStudyField(fields.get(0));
-        testDegree.addStudyField(fields.get(1));
-        Module expSelected = fields.get(0);
+        TreeMap<String,Course> emptyCourses = new TreeMap<>();
+        Module testField = new Module(emptyCourses,"studyfield-1","1",0);
+        testDegree.addStudyField(testField);
+        testDegree.addStudyField(testField);
+        Module expSelected = testField;
         testDegree.setSelectedField(expSelected.getName());
         Module resultSelected = testDegree.getSelectedField();
-        assertEquals(expSelected.getName(),resultSelected.getName());
-        
-        
-        
+        assertEquals(expSelected.getName(),resultSelected.getName());    
     }
-    
-    /**
-     * Apumetodi, joka antaa opintosuuntia.
-     * @return opintosuuntia listassa
-     */
-    public static Stream<List<Module>> fieldProvider() {
-        TreeMap<String,Course> emptyCourses = new TreeMap<>();
-        Module testField1 = new Module(emptyCourses,"studyfield-1","1",0);
-        Module testField2 = new Module(emptyCourses,"studyfield-2","2",0);
-        Module testField3 = new Module(emptyCourses,"studyfield-3","3",0);
-        Module testField4 = new Module(emptyCourses,"studyfield-4","4",0);
-        return Stream.of(List.of(testField1, testField2),
-                List.of(testField3, testField4)
-        );
-    }
+
 }
