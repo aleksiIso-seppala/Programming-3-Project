@@ -1,8 +1,6 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Lauri Kalliojärvi
@@ -11,7 +9,6 @@ import java.util.ArrayList;
 public class Course implements Comparable<Course>{
 
     private int studyPoints;
-    private ArrayList<Degree> degrees;
     private String name;
     private String id;
     
@@ -19,7 +16,7 @@ public class Course implements Comparable<Course>{
             String name,
             String id ) {
         
-        this.degrees = degrees;
+        this.studyPoints = studyPoints;
         this.name = name;
         this.id = id;
         
@@ -27,10 +24,6 @@ public class Course implements Comparable<Course>{
     
     public int getStudyPoints() {
         return this.studyPoints;
-    }
-    
-    public ArrayList<Degree> getDegrees() {
-        return this.degrees;
     }
     
     public String getName() {

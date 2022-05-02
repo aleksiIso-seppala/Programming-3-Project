@@ -9,20 +9,29 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
+ * Testiluokka, joka testaa Module-luokan toiminnallisuuden
  * @author Lauri Kalliojärvi
  */
 public class ModuleTest {
     
+    /**
+     * Testiluokan rakentaja.
+     */
     public ModuleTest() {
     }
     
+    /**
+     * Kertoo suoritettavan testin nimen ja testattavat metodit
+     */
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         
         System.out.println(testInfo.getDisplayName());
     }
-
+    
+    /**
+     * Testi, joka testaa Module-luokan luomisen sekä attribuuttien tallentumisen
+     */
     @Test
     @DisplayName("Testing class-initialization and getName, getID and getMincredits")
     public void testInit() {
@@ -35,7 +44,10 @@ public class ModuleTest {
         assertEquals(id, testModule.getId());
         assertEquals(credits, testModule.getMinCredits());
     }
-
+    
+    /**
+     * Testi, joka testaa Module-luokan kurssitietojen lisäämisen sekä poistamisen.
+     */
     @Test
     @DisplayName("testing adding and getting courses")
     public void testAddAndGetCourses() {
@@ -52,6 +64,10 @@ public class ModuleTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     * Testi, joka testaa Module-luokan tutkinto-ohjelman tallentamisen 
+     * sekä lukemisen.
+     */
     @Test
     @DisplayName("Testing settting and getting degree")
     public void testSetAndGetDegree() {
@@ -66,7 +82,11 @@ public class ModuleTest {
         boolean result = testDegree.equals(testModule.getDegree());
         assertEquals(expResult, result);
     }
-
+    
+    /**
+     * Testi, joka testaa Module-luokan alimoduulien tallentamisen
+     * sekä lukemisen.
+     */
     @Test
     @DisplayName("Testing adding and getting studyfield")
     public void testAddAndGetSubModules() {
@@ -84,6 +104,10 @@ public class ModuleTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     * Testi, joka testaa Module-luokan opintopisteiden lisäämisen
+     * sekä lukemisen.
+     */
     @Test
     @DisplayName("Testing setting and getting accCredits")
     public void testSetAndGetAccCredits() {
@@ -98,6 +122,9 @@ public class ModuleTest {
         
     }
     
+    /**
+     * Testi, joka testaa Module-luokan tilan tulostamisen.
+     */
     @Test
     @DisplayName("Testing toString-method")
     public void testToString() {

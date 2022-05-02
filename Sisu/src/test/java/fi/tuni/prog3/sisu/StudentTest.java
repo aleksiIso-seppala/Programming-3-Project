@@ -1,11 +1,8 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
-import java.util.Map;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,37 +12,44 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
+ * Testiluokka, joka testaa Student-luokan toiminnallisuuden.
  * @author Lauri Kalliojärvi
  */
 public class StudentTest {
     
+    /**
+     * Testiluokan rakentaja.
+     */
     public StudentTest() {
     }
     
+    /**
+     * Kertoo suoritettavan testin nimen ja testattavat metodit.
+     */
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         
         System.out.println(testInfo.getDisplayName());
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan luomisen tunnistetiedoilla.
+     */
     @Test
-    @DisplayName("Testing testGetName")
-    public void testGetName() {
+    @DisplayName("Testing class-initialization and getName and getStudentNr")
+    public void testInit() {
         
-        Student testStudent1 = new Student("Matti", "001");
-        String expResult = "Matti";
-        String result = testStudent1.getName();
-        assertEquals(expResult, result);
+        String name = "Matti";
+        String nr = "001";
+        Student testStudent = new Student(name, nr);
+        assertEquals(name, testStudent.getName());
+        assertEquals(nr, testStudent.getStudentNr());
     }
-    @Test
-    @DisplayName("Testing getStudentNr")
-    public void testGetStudentNr() {
-       
-        Student testStudent1 = new Student("Matti", "001");
-        String expResult = "001";
-        String result = testStudent1.getStudentNr();
-        assertEquals(expResult, result);
-    }
+    
+    /**
+     * Testi, joka testaa Student-luokan luomisen aloitusvuodella
+     * @param startYear aloitusvuosi.
+     */
     @ParameterizedTest
     @MethodSource("yearProvider")
     @DisplayName("Testing getStartingYear")
@@ -63,6 +67,11 @@ public class StudentTest {
             assertEquals(expResult, result);
         }
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan luomisen valmistumisvuodella
+     * @param finishYear aloitusvuosi.
+     */
     @ParameterizedTest
     @MethodSource("yearProvider")
     @DisplayName("Testing getFinishingYear")
@@ -80,6 +89,11 @@ public class StudentTest {
             assertEquals(expResult, result);
         }
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan suoritetietojen tallentamisen
+     * sekä hakemisen.
+     */
     @Test
     @DisplayName("Testing getCompletions and setCompletions")
     public void testSetANdGetCompletions() {
@@ -98,6 +112,11 @@ public class StudentTest {
         boolean result = resultMap.equals(expMap);
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan opintosuunnan tallentamisen
+     * sekä hakemisen.
+     */
     @Test
     @DisplayName("Testing getActiveStudyField and setActiveStudyField")
     public void testSetAndGetActiveStudyField() {
@@ -110,6 +129,11 @@ public class StudentTest {
         String result = testStudent1.getActiveStudyField().getId();
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan tutkinto-ohjelman tallentamisen
+     * sekä hakemisen.
+     */
     @Test
     @DisplayName("Testing getActiveDegree and setActiveDegree")
     public void testSetAndGetActiveDegree() {
@@ -121,7 +145,12 @@ public class StudentTest {
         String result = testStudent1.getActiveDegree().getId();
         assertEquals(expResult, result);
     }
-
+    
+    /**
+     * Testi, joka testaa Student-luokan metodin completeCourse,
+     * jota kutsutaan kun kurssi on suoritettu
+     * @param course kurssi
+     */
     @ParameterizedTest
     @MethodSource("courseProvider")
     @DisplayName("Testing completeCourse")
@@ -135,6 +164,10 @@ public class StudentTest {
         assertEquals(expResult,result);  
     }
     
+    /**
+     * Testi, joka testaa Student-luokan kurssin poistamisen suoritetiedoista
+     * @param course kurssi
+     */
     @ParameterizedTest
     @MethodSource("courseProvider")
     @DisplayName("Testing removeCourse")
@@ -150,6 +183,10 @@ public class StudentTest {
         assertEquals(expResult,result);
         
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan tilanteen tulostamisen.
+     */
     @Test
     @DisplayName("Testing toString")
     public void testToString() {
@@ -158,10 +195,16 @@ public class StudentTest {
         String result = c.toString();
         assertEquals(expResult, result);
     }
+    /**
+     * Apumetodi, joka antaa vuositietoja.
+     */
     public static Stream<String> yearProvider() {
         return Stream.of(null, "2020");
     }
     
+    /**
+     * Apumetodi, joka antaa kurssitietoja.
+     */
     public static Stream<Course> courseProvider() {
         Course course1 = new Course(5,"AAA","001");
         Course course2 = new Course(3,"BBB","002");

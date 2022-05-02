@@ -1,67 +1,71 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 /**
- *
+ * Testiluokka, joka testaa Course-luokan toiminnallisuuden.
  * @author Lauri Kalliojärvi
  */
 public class CourseTest {
     
-    public static final int STUDY_POINTS = 5;
-    public static final String COURSE1_NAME = "Kurssi 1";
-    public static final String COURSE_ID = "AAA-001";
+    /**
+     * Testiluokan rakentaja.
+     */
+    public CourseTest() {
+    }
     
+    /**
+     * Kertoo suoritettavan testin nimen ja testattavat metodit.
+     */
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         System.out.println(testInfo.getDisplayName());
     }
-    /*
+    
+    /**
+     * Testi, joka testaa uuden Student-luokan luomisen sekä 
+     * get-metodit.
+     */
     @Test
-    @DisplayName("Testing getStudyPoints")
-    public void testGetStudyPoints() {
-        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
-        int expResult = STUDY_POINTS;
-        int result = c.getStudyPoints();
-        assertEquals(expResult, result);
+    @DisplayName("Testing class-initialization and get-methods")
+    public void testInit() {
+        String name = "Kurssi-1";
+        String id = "AAA-1";
+        int studyPoints = 5;
+        Course testCourse = new Course(studyPoints, name, id);
+        assertEquals(name, testCourse.getName());
+        assertEquals(id, testCourse.getId());
+        assertEquals(studyPoints, testCourse.getStudyPoints());
     }
-*/
-    @Test
-    @DisplayName("Testing getName")
-    public void testGetName() {
-        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
-        String expResult = COURSE1_NAME;
-        String result = c.getName();
-        assertEquals(expResult, result);
-    }
-    @Test
-    @DisplayName("Testing getId")
-    public void testGetId() {
-        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
-        String expResult = COURSE_ID;
-        String result = c.getId();
-        assertEquals(expResult, result);
-    }
+    
+    /**
+     * Testi, joka testaa Student-luokan tilan tulostumisen.
+     */
     @Test
     @DisplayName("Testing toString")
     public void testToString() {
-        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
-        String expResult = COURSE1_NAME;
-        String result = c.toString();
-        assertEquals(expResult, result);
+        String name = "Kurssi-1";
+        String id = "AAA-1";
+        int studyPoints = 5;
+        Course testCourse = new Course(studyPoints, name, id);
+        assertEquals(name, testCourse.toString());
     }
+    
+    /**
+     * Testi, joka testaa Student-luokan vertailumetodin toimivuuden.
+     */
     @Test
     @DisplayName("Testing compareTo")
     public void testCompareTo() {
-        Course c = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
-        Course compare = new Course(STUDY_POINTS, COURSE1_NAME, COURSE_ID);
+        String name = "Kurssi-1";
+        String id = "AAA-1";
+        int studyPoints = 5;
+        Course c = new Course(studyPoints, name, id);
+        Course compare = new Course(studyPoints, name, id);
         int expResult = 0;
         int result = c.compareTo(compare);
         assertEquals(expResult, result);
