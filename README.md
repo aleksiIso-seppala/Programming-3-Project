@@ -1,9 +1,20 @@
-# Programming 3 project template
 
-Make sure you have setup ssh-key for your GitLab account.
+# Sisusta selvää
 
-Code will be published soon.
+Työkalu helpottamaan taistelussa Sisua vastaan sekä tyydyttämään kaikki opintojen seurantaan liittyvät tarpeet. 
 
-Note! The .gitlab-ci.yml is offline at the moment.
+## Features
 
-# You are allowed (and probably should) make changes to this file after you have started your project. :)
+- Tutkinto-ohjelmien ja opintosuuntien tutkiminen
+- Kurssien selaus ja suorittaminen
+- Opiskelijatietojen sekä suoritusten tallennus ja luku
+
+
+
+## Authors
+
+- Aleksi Iso-Seppälä
+- Lauri Puoskari
+- Lauri Kalliojärvi
+
+
