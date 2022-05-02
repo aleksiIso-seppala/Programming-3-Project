@@ -21,7 +21,13 @@ import java.nio.file.Files;
 public class JSONHandler {
     
     private final static String STUDENT_FILE = "StudentData.json";
-
+    
+    /**
+     * Käy läpi sisun tutkinto-ohjelmat.
+     * @return Treemap, joka sisältää kaikki tutkinto-ohjelmat.
+     * @throws MalformedURLException
+     * @throws IOException 
+     */    
     public static TreeMap<String, Degree> readDegrees() throws MalformedURLException, IOException{
         
         TreeMap<String, Degree> degrees = new TreeMap<>();
@@ -54,6 +60,12 @@ public class JSONHandler {
         return degrees;
     }
     
+    /**
+     * lukee halutun tutkinto-ohjelman alaiset moduulit ja kurssit
+     * @param selectedDegree valittu tutkinto-ohjelma
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     public static void readDegree(Degree selectedDegree) throws MalformedURLException, IOException{
         
         String groupId = selectedDegree.getId();
@@ -128,61 +140,13 @@ public class JSONHandler {
         return;
     } 
     
-//    public static TreeMap<String, Module> readModules(Degree selectedDegree) throws 
-//                                        MalformedURLException, IOException {
-//        TreeMap<String, Module> modules = new TreeMap<>();
-//        
-//        String groupId = selectedDegree.getId();
-//        
-//        String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
-//        + "by-group-id?groupId=" + groupId + 
-//        "&universityId=tuni-university-root-id";
-//        
-//        URL url = new URL(mUrl);
-//        BufferedReader input = new BufferedReader(
-//            new InputStreamReader(url.openStream()));
-//        Gson gson = new Gson();
-//        JsonArray response = gson.fromJson(input,JsonArray.class);  
-//        
-//        for(var object : response) {
-//            JsonObject degree = (JsonObject) object;
-//            if(degree == null){
-//                continue;
-//            }
-//            
-//            String name;
-//            JsonObject nameObject = degree.getAsJsonObject("name");
-//            if(nameObject.get("fi") == null){
-//                name = null;
-//            }
-//            else{
-//                name = nameObject.get("fi").toString();               
-//            }
-//            
-//            if (name != null) {
-//                if (name.equals(selectedDegree.getName())) {
-//                    JsonObject rules = degree.getAsJsonObject("rule");
-//                    var innerRule = rules.getAsJsonArray("rules");
-//                    if(innerRule == null){
-//                        var tempRule = rules.getAsJsonObject("rule");
-//                        innerRule = tempRule.getAsJsonArray("rules");
-//                    }
-//
-//                    for(var rule : innerRule){
-//                        JsonObject object1 = rule.getAsJsonObject();
-//                        if(object1.get("type").getAsString().equals("ModuleRule")){
-//                            String moduleId = object1.get("moduleGroupId").getAsString();
-//                            Module module = readModule(moduleId);
-//                            modules.put(module.getName(), module);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        
-//        return modules;
-//    }
-    
+    /**
+     * lukee modulin ja sen alimoduulit
+     * @param groupId moduulin groupId, jolla se haetaan Sisusta.
+     * @return palauttaa Moduulin luokkana.
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     public static Module readModule(String groupId) throws MalformedURLException, IOException{
         
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="
@@ -230,6 +194,13 @@ public class JSONHandler {
         return null;
     }
     
+    /**
+     * Rekursiivinen funktio, joka käy läpi moduulin "kerroksia" eli listoja,
+     * kunnes löydetään moduulin alimoduulit tai kurssit
+     * @param array käsiteltävä lista.
+     * @param module Moduuli, jonka alla käsiteltävä lista on
+     * @throws IOException 
+     */
     public static void readArray(JsonArray array, Module module) throws IOException{
                 
         for(JsonElement element : array){
@@ -271,6 +242,13 @@ public class JSONHandler {
         }
     }
     
+    /**
+     * Käy läpi kurssin tiedot Sisusta, ja luo sen pohjalta Course-olion.
+     * @param courseId Kurssin Id, jonka avulla tiedot haetaan
+     * @return Luotu kurssi-olio.
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     public static Course readCourse(String courseId) throws MalformedURLException, IOException{
         
         String sUrl = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="
@@ -304,6 +282,12 @@ public class JSONHandler {
         return null;
     }
     
+    /**
+     * Kirjoittaa kaikki tallennetut opiskelijat JSON-tiedostoon opiskelijatietojen
+     * tallennusta varten.
+     * @param students Lista tallennettavista opiskelijoista
+     * @throws IOException 
+     */
     public static void writeAllStudentData(ArrayList<Student> students) throws IOException {
         
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -336,6 +320,11 @@ public class JSONHandler {
         
     }
     
+    /**
+     * Lukee tallennetut opiskelijat JSON-tiedostosta. Tallentaa luetut opiskelijat olioina listaan.
+     * @return Palauttaa listan opiskelija-olioista.
+     * @throws IOException 
+     */
     public static ArrayList<Student> readAllStudentData() throws IOException {
         
         Gson gson = new Gson();
