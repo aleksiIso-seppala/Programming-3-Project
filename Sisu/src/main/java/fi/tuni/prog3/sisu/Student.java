@@ -16,8 +16,8 @@ public class Student {
     private String startingYear = null;
     private String finishingYear = null;
     private TreeMap<Course, Integer> completions;
-    private Degree activeDegree;
-    private Module activeStudyField;
+    private Degree activeDegree = null;
+    private Module activeStudyField = null;
     
     public Student(String studentName, String studentNr) {
         this.studentName = studentName;

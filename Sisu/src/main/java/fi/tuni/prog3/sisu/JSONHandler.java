@@ -72,21 +72,55 @@ public class JSONHandler {
             JsonObject degree = (JsonObject) object;
             
             JsonObject rules = degree.getAsJsonObject("rule");
+            
+            boolean hasStudyFields = true;
+            
+            while(rules.get("type").getAsString().equals("CreditsRule")){
+                if(rules.get("credits") != null){
+                    hasStudyFields = false;
+                }
+                rules = rules.getAsJsonObject("rule");
+            }
+           
             var innerRule = rules.getAsJsonArray("rules");
-            if(innerRule == null){
-                var tempRule = rules.getAsJsonObject("rule");
-                innerRule = tempRule.getAsJsonArray("rules");
+            OUTER:
+            while(true){
+                for(var rule : innerRule){
+                    JsonObject object1 = rule.getAsJsonObject();
+                    if(object1.get("type").getAsString().equals("CompositeRule")){
+                        innerRule = object1.getAsJsonArray("rules");
+                        break;
+                    }
+                    else if(object1.get("type").getAsString().equals("ModuleRule")){
+                        break OUTER;
+                    }
+                }               
             }
 
+            int counter = 0;
             for(var rule : innerRule){
                 JsonObject object1 = rule.getAsJsonObject();
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
                     Module module = readModule(moduleId);
-                    selectedDegree.addStudyField(module);
-
-
-
+                    if(hasStudyFields){
+                        selectedDegree.addStudyField(module);                     
+                    }
+                    else{
+                        selectedDegree.addModule(module);
+                    }
+ 
+                }
+                else{
+                    TreeMap<String,Course> courses = new TreeMap<>();
+                    Module studyField = new Module(courses,selectedDegree.getName(),selectedDegree.getId(),selectedDegree.getStudyPoints());
+                    readArray(innerRule,studyField);
+                    if(hasStudyFields){
+                        selectedDegree.addStudyField(studyField);                     
+                    }
+                    else{
+                        selectedDegree.addModule(studyField);
+                    }
                 }
             }
         }
@@ -281,6 +315,13 @@ public class JSONHandler {
             user.addProperty("studentNr",student.getStudentNr());
             user.addProperty("startingYear",student.getStartingYear());
             user.addProperty("finishingYear",student.getFinishingYear());
+            if(student.getActiveDegree() != null){
+                user.addProperty("activeDegree",student.getActiveDegree().getName());  
+            }
+
+            if(student.getActiveStudyField() != null){
+                user.addProperty("activeStudyField",student.getActiveStudyField().getName());  
+            }
             JsonArray completions = new JsonArray();
 
             for(var completion : student.getCompletions().entrySet()){
@@ -337,25 +378,28 @@ public class JSONHandler {
     
     
     public static void main(String args[]) throws IOException {
-        readDegrees();
-        Student st = new Student("Matti","007","2015");
-        Student st2 = new Student("Maija","1");
-        ArrayList<Student> students = new ArrayList<>();
-        Course course1 = new Course(5,"Tietotekniikka","tut-1");
-        Course course2 = new Course(5,"sähkötekniikka","tut-2");
-        Course course3 = new Course(5,"signaalit ja mittaus","tut-3");
-        Course course4 = new Course(5,"ohjemlointi 1","tut-4");        
-        Course course5 = new Course(5,"ohjelmointi 2","tut-5");
-        Course course6 = new Course(5,"tetapk","tut-6");
-        students.add(st);
-        students.add(st2);
-        st.completeCourse(course1);
-        st.completeCourse(course2);
-        st.completeCourse(course3);
-        st2.completeCourse(course4);
-        st2.completeCourse(course5);
-        st2.completeCourse(course6);
-        writeAllStudentData(students);
+        var degrees = readDegrees();
+        for(var degree : degrees.entrySet()){
+            readDegree(degree.getValue());
+        }
+//        Student st = new Student("Matti","007","2015");
+//        Student st2 = new Student("Maija","1");
+//        ArrayList<Student> students = new ArrayList<>();
+//        Course course1 = new Course(5,"Tietotekniikka","tut-1");
+//        Course course2 = new Course(5,"sähkötekniikka","tut-2");
+//        Course course3 = new Course(5,"signaalit ja mittaus","tut-3");
+//        Course course4 = new Course(5,"ohjemlointi 1","tut-4");        
+//        Course course5 = new Course(5,"ohjelmointi 2","tut-5");
+//        Course course6 = new Course(5,"tetapk","tut-6");
+//        students.add(st);
+//        students.add(st2);
+//        st.completeCourse(course1);
+//        st.completeCourse(course2);
+//        st.completeCourse(course3);
+//        st2.completeCourse(course4);
+//        st2.completeCourse(course5);
+//        st2.completeCourse(course6);
+//        writeAllStudentData(students);
     }
     
     
