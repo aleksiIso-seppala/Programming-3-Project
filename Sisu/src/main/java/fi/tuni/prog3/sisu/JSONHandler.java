@@ -309,7 +309,7 @@ public class JSONHandler {
             JsonArray completions = new JsonArray();
 
             for(var completion : student.getCompletions().entrySet()){
-                    completions.add(completion.getKey().getId());
+                    completions.add(completion.getValue().getId());
             }
             user.add("completions", completions);
             userData.add(user);

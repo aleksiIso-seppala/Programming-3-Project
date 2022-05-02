@@ -31,9 +31,14 @@ public class Sisu {
      */
     private boolean isSuccessfullySaved;
     /**
+     * Totuusarvo siitä, löytyikö annettuja tietoja vastaavaa opiskelijaa
+     * StudentData.json -tiedostosta.
+     */
+    private boolean isStudentFound;
+    /**
      * Map kaikista tutkinto-ohjelmaan sisältyvistä kursseista.
      */
-    private TreeMap<String,Course> allSubCourses;
+    private TreeMap<String,Course> coursesInCompletionsView;
     
     /**
      * Sisu-luokan rakentaja.
@@ -59,24 +64,33 @@ public class Sisu {
                 break;
         }
         this.savedStudents = JSONHandler.readAllStudentData();
-        boolean isInSavedStudents = false;
+        this.isStudentFound = false;
         int studentIndex = 0;
-        for ( Student savedStudent : this.savedStudents){
+        for (Student savedStudent : this.savedStudents){
             if(savedStudent.getStudentNr().equals(this.activeStudent.getStudentNr())){
-                isInSavedStudents = true;
+                this.isStudentFound = true;
                 studentIndex = this.savedStudents.indexOf(savedStudent);
+                System.out.println("Student is found");
             }
         }
-        if (isInSavedStudents) {
+        if (this.isStudentFound) {
             Student savedStudent = this.savedStudents.get(studentIndex);
-            this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
-            this.activeStudent.setActiveStudyField(savedStudent.getActiveStudyField());
+            if (savedStudent.getActiveDegree() != null) {
+                this.activeStudent.setActiveDegree(savedStudent.getActiveDegree());
+                this.selectedDegree = savedStudent.getActiveDegree();
+            }
+            if (savedStudent.getActiveStudyField() != null) {
+                this.activeStudent.setActiveStudyField(savedStudent.
+                                                        getActiveStudyField());
+                this.selectedDegree.setSelectedField(
+                                savedStudent.getActiveStudyField().getName());
+            }
             this.activeStudent.setCompletions(savedStudent.getCompletions());
             this.savedStudents.remove(savedStudent);
         }
         this.savedStudents.add(this.activeStudent);
         this.degrees = JSONHandler.readDegrees();
-        this.allSubCourses = new TreeMap<>();
+        this.coursesInCompletionsView = new TreeMap<>();
     }
     
     /**
@@ -129,7 +143,7 @@ public class Sisu {
      * Lukee valitun tutkinto-ohjelman sisällön ja tallentaa sen Degree-luokkaan.
      * @throws IOException 
      */
-    public void setModules() throws IOException {
+    public void initModules() throws IOException {
         JSONHandler.readDegree(this.selectedDegree);
     }
     
@@ -163,7 +177,8 @@ public class Sisu {
         for (String course : module.getCourses().keySet()) {
             TreeItem<String> courseTi = new TreeItem<>(course);
             moduleTi.getChildren().add(courseTi);
-            this.addToAllSubCourses(module.getCourses().get(course));
+            this.addToCoursesInCompletionsView(module.getCourses().get(course));
+            this.getSelectedDegree().addToAllSubCourses(module.getCourses().get(course));
         }
         return moduleTi;
     }
@@ -180,22 +195,31 @@ public class Sisu {
      * Palauttaa listan valitun tutkinto-ohjelman kaikkien kurssien nimistä.
      * @return Lista kaikkien tutkinto-ohjelmaan sisältyvien kurssien nimistä.
      */
-    public TreeMap<String,Course> getAllSubCourses() {
-        return this.allSubCourses;
+    public TreeMap<String,Course> getCoursesInCompletionsView() {
+        return this.coursesInCompletionsView;
     }
     
     /**
      * Lisää annetun kurssin valitun tutkinto-ohjelman kaikkiin kursseihin.
      * @param course Lisättävä kurssi.
      */
-    public void addToAllSubCourses(Course course) {
-        this.allSubCourses.put(course.getName(), course);
+    public void addToCoursesInCompletionsView(Course course) {
+        this.coursesInCompletionsView.put(course.getName(), course);
     }
     
     /**
      * Tyhjentää listan valitun tutkinto-ohjelman kaikista kursseista.
      */
-    public void clearAllSubCourses() {
-        this.allSubCourses.clear();
+    public void clearCoursesInCompletionsView() {
+        this.coursesInCompletionsView.clear();
+    }
+    
+    /**
+     * Palauttaa totuusarvon, onko annettuja opiskelijan tietoja vastaavaa
+     * opiskelijaa löytynyt StudentData.json -tiedostosta.
+     * @return Totuusarvo opiskelijan löytymisestä.
+     */
+    public boolean getIsStudentFound() {
+        return this.isStudentFound;
     }
 }

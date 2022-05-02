@@ -15,7 +15,7 @@ public class Student {
     private String studentNr;
     private String startingYear = null;
     private String finishingYear = null;
-    private TreeMap<Course, Integer> completions;
+    private TreeMap<String, Course> completions;
     private Degree activeDegree = null;
     private Module activeStudyField = null;
     
@@ -58,7 +58,7 @@ public class Student {
         return this.finishingYear;
     }
     
-    public TreeMap<Course, Integer> getCompletions() {
+    public TreeMap<String, Course> getCompletions() {
         return this.completions;
     }
        
@@ -70,7 +70,7 @@ public class Student {
         return this.activeDegree;
     }
  
-    public void setCompletions(TreeMap<Course, Integer> newCompletions) {
+    public void setCompletions(TreeMap<String, Course> newCompletions) {
         this.completions = newCompletions;
     }
     
@@ -83,7 +83,7 @@ public class Student {
     }
     
     public void completeCourse(Course completedCourse) {
-        completions.put(completedCourse,completedCourse.getStudyPoints());
+        completions.put(completedCourse.getName(),completedCourse);
     }
     
     public void removeCourse(Course removedCourse) {

@@ -41,6 +41,11 @@ public class Degree {
    private Module selectedField;
    
    /**
+    * Kaikki tutkinto-ohjelmaan sisältyvät kurssit.
+    */
+   private TreeMap<String, Course> allSubCourses;
+   
+   /**
      * Rakennin, joka ottaa arvot opintopisteille, nimelle 
      * sekä tunnisteelle parametreina.
      * @param studyPoints opintopisteet
@@ -53,6 +58,7 @@ public class Degree {
            String id ) {  
        this.studyFields = new TreeMap<>();
        this.modules = new TreeMap<>();
+       this.allSubCourses = new TreeMap<>();
        this.studyPoints = studyPoints;
        this.name = name;
        this.id = id;  
@@ -84,12 +90,43 @@ public class Degree {
    }
    
    /**
-     * Lisää annetun moduulin Tutkinto-ohjelmaan,
+     * Lisää annetun moduulin tutkinto-ohjelmaan,
      * lisäämällä sen moduuleista listaa pitävään TreeMappiin.
      * @param module moduuli-olio.
      */
    public void addStudyField(Module module) {
        studyFields.put(module.getName(), module);
+   }
+   
+   /**
+    * Lukee kaikki tutkinto-ohjelman alimoduulien kurssit ja lisää ne
+    * attribuuttiin allSubCourses.
+    */
+   public void addToAllSubCourses(Course course) {
+       this.allSubCourses.put(course.getName(), course);
+//        if (this.studyFields.isEmpty()) {
+//            for (var module : this.modules.entrySet()) {
+//                TreeMap<String, Course> courses = module.getValue().getCourses();
+//                System.out.println(courses);
+//                this.allSubCourses.putAll(courses);
+//            }
+//        }
+//        else {
+//            for (var field : this.studyFields.entrySet()) {
+//                TreeMap<String, Course> courses = field.getValue().getCourses();
+//                System.out.println(courses);
+//                this.allSubCourses.putAll(courses);
+//            }
+//        }
+//        System.out.println(this.allSubCourses);
+    }
+   
+   /**
+    * Palauttaa TreeMapin kaikista tutkinto-ohjelmaan sisältyvistä kursseista.
+    * @return TreeMap kaikista tutkinto-ohjelmaan sisältyvistä kursseista..
+    */
+   public TreeMap<String, Course> getAllSubCourses() {
+       return this.allSubCourses;
    }
    
    /**

@@ -101,13 +101,13 @@ public class StudentTest {
         Student testStudent1 = new Student("Matti", "001");
         Course testCourse1 = new Course(5,"AAA","001");
         Course testCourse2 = new Course(5,"BBB","002");
-        TreeMap<Course, Integer> testCompletions = new TreeMap<>();
-        testCompletions.put(testCourse1, testCourse1.getStudyPoints());
-        testCompletions.put(testCourse2, testCourse2.getStudyPoints());
+        TreeMap<String, Course> testCompletions = new TreeMap<>();
+        testCompletions.put(testCourse1.getName(), testCourse1);
+        testCompletions.put(testCourse2.getName(), testCourse2);
         testStudent1.setCompletions(testCompletions);
         
-        TreeMap<Course, Integer> expMap = testCompletions;
-        TreeMap<Course, Integer> resultMap = testStudent1.getCompletions();
+        TreeMap<String, Course> expMap = testCompletions;
+        TreeMap<String, Course> resultMap = testStudent1.getCompletions();
         boolean expResult = true;
         boolean result = resultMap.equals(expMap);
         assertEquals(expResult, result);
@@ -174,8 +174,8 @@ public class StudentTest {
     public void testRemoveCourse(Course course) {
         
         Student testStudent1 = new Student("Matti", "1");
-        TreeMap<Course, Integer> toComplete = new TreeMap<>();
-        toComplete.put(course,course.getStudyPoints());
+        TreeMap<String, Course> toComplete = new TreeMap<>();
+        toComplete.put(course.getName(),course);
         testStudent1.setCompletions(toComplete);
         testStudent1.removeCourse(course);
         boolean expResult = false;
