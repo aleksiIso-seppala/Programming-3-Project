@@ -7,10 +7,8 @@ package fi.tuni.prog3.sisu;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.*;
-import java.nio.charset.*;
 import java.util.ArrayList;
 import com.google.gson.*;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.TreeMap;
 import java.nio.file.Files;
@@ -363,34 +361,6 @@ public class JSONHandler {
 
         return students;
         
-    }
-    
-    
-    public static void main(String args[]) throws IOException {
-        var degrees = readDegrees();
-        for(var degree : degrees.entrySet()){
-            readDegree(degree.getValue());
-        }
-//        Student st = new Student("Matti","007","2015");
-//        Student st2 = new Student("Maija","1");
-//        ArrayList<Student> students = new ArrayList<>();
-//        Course course1 = new Course(5,"Tietotekniikka","tut-1");
-//        Course course2 = new Course(5,"sähkötekniikka","tut-2");
-//        Course course3 = new Course(5,"signaalit ja mittaus","tut-3");
-//        Course course4 = new Course(5,"ohjemlointi 1","tut-4");        
-//        Course course5 = new Course(5,"ohjelmointi 2","tut-5");
-//        Course course6 = new Course(5,"tetapk","tut-6");
-//        students.add(st);
-//        students.add(st2);
-//        st.completeCourse(course1);
-//        st.completeCourse(course2);
-//        st.completeCourse(course3);
-//        st2.completeCourse(course4);
-//        st2.completeCourse(course5);
-//        st2.completeCourse(course6);
-//        writeAllStudentData(students);
-    }
-    
-    
+    }   
 }
 
