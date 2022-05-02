@@ -20,8 +20,13 @@
   {
     "studentName": "asd",
     "studentNr": "asd",
-    "activeDegree": "Arkkitehtuurin kandidaattiohjelma",
-    "activeStudyField": "Arkkitehtuurin kandidaattiohjelman yhteiset opinnot",
-    "completions": []
+    "activeDegree": "Tieto- ja sähkötekniikan kandidaattiohjelma",
+    "activeStudyField": "Tietotekniikka",
+    "completions": [
+      "otm-2a54f37d-bce2-46e3-aa9a-ddd35a1e320f",
+      "tut-cu-g-37107",
+      "tut-cu-g-45943",
+      "tut-cu-g-47510"
+    ]
   }
 ]

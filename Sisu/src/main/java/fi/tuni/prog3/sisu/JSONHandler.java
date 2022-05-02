@@ -72,12 +72,16 @@ public class JSONHandler {
             JsonObject degree = (JsonObject) object;
             
             JsonObject rules = degree.getAsJsonObject("rule");
-
+            
+            boolean hasStudyFields = true;
+            
             while(rules.get("type").getAsString().equals("CreditsRule")){
+                if(rules.get("credits") != null){
+                    hasStudyFields = false;
+                }
                 rules = rules.getAsJsonObject("rule");
             }
-            
-            
+           
             var innerRule = rules.getAsJsonArray("rules");
             OUTER:
             while(true){
@@ -99,14 +103,24 @@ public class JSONHandler {
                 if(object1.get("type").getAsString().equals("ModuleRule")){
                     String moduleId = object1.get("moduleGroupId").getAsString();
                     Module module = readModule(moduleId);
-                    selectedDegree.addStudyField(module);
+                    if(hasStudyFields){
+                        selectedDegree.addStudyField(module);                     
+                    }
+                    else{
+                        selectedDegree.addModule(module);
+                    }
  
                 }
                 else{
                     TreeMap<String,Course> courses = new TreeMap<>();
                     Module studyField = new Module(courses,selectedDegree.getName(),selectedDegree.getId(),selectedDegree.getStudyPoints());
                     readArray(innerRule,studyField);
-                    selectedDegree.addStudyField(studyField);
+                    if(hasStudyFields){
+                        selectedDegree.addStudyField(studyField);                     
+                    }
+                    else{
+                        selectedDegree.addModule(studyField);
+                    }
                 }
             }
         }
