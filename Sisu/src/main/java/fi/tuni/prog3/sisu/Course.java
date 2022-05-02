@@ -65,11 +65,11 @@ public class Course {
     }
     
     /**
-     * Palauttaa Course-olion tilan nimen muodossa.
-     * @return kurssin nimi
+     * Palauttaa Course-olion tilan nimen ja opintopisteiden muodossa.
+     * @return [kurssin nimi] [opintopisteet]op
      */
     @Override
     public String toString() {
-        return this.name;
+        return this.name + " " + this.studyPoints + "op";
     }
 }

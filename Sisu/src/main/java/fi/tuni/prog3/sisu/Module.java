@@ -135,12 +135,16 @@ public class Module {
     }
     
     /**
-     * Tulostaa moduulin tilan.
-     * @return moduulin tila muodossa: nimi suoritetut pisteet/vähimmäispisteet
+     * Tulostaa moduulin tilan nimen, suoritettujen- ja vähimmäispisteiden muodossa.
+     * @return moduulin tila muodossa: [nimi] [suoritetut pisteet]/[vähimmäispisteet]op
      */
     @Override
     public String toString() {
-        return this.name + " " + this.accCredits + "/" + this.minCredits;
+        if(this.minCredits == -1) {
+            return this.name;
+        } else {
+            return this.name + " " + this.accCredits + "/" + this.minCredits + "op";
+        }
     }
     
     /**
