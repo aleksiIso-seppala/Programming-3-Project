@@ -14,20 +14,29 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
- *
+ * Testiluokka, joka testaa StudyField-luokan toiminnallisuuden
  * @author Lauri Kalliojärvi
  */
 public class StudyFieldTest {
     
+    /**
+     * Testiluokan rakentaja.
+     */
     public StudyFieldTest() {
     }
     
+    /**
+     * Kertoo suoritettavan testin nimen ja testattavat metodit
+     */
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
         
         System.out.println(testInfo.getDisplayName());
     }
- 
+    
+    /**
+     * Testi, joka testaa uuden StyField-luokan luomisen.
+     */
     @Test
     @DisplayName("Testing initializing a new StudyField and getting it's attributes")
     public void testClassInitializing() {
@@ -44,7 +53,11 @@ public class StudyFieldTest {
         assertEquals(testStudyField.getCourses(), testList);
         
     }
-
+    
+    /**
+     * Testi, joka testaa Module-luokan tutkinto-ohjelman tallentamisen sekä
+     * lukemisen.
+     */
     @Test
     @DisplayName("Testing getDegree and setDegree")
     public void testSetandGetDegree() {
@@ -58,6 +71,9 @@ public class StudyFieldTest {
         assertEquals(expResult, testStudyField.getDegree().getId());
     }
     
+    /**
+     * Testi, joka testaa StudyField-luokan tilan tulostumisen.
+     */
     @Test
     @DisplayName("Testing toString")
     public void testToString() {

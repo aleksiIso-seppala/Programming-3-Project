@@ -1,12 +1,9 @@
 
 package fi.tuni.prog3.sisu;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInfo;
@@ -16,20 +13,29 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
+ * Testiluokka, joka testaa Degree-luokan toiminnallisuuden.
  * @author Lauri Kalliojärvi
  */
 public class DegreeTest {
     
+    /**
+     * Testiluokan rakentaja.
+     */
     public DegreeTest() {
     }
     
+    /**
+     * Kertoo suoritettavan testin nimen ja testattavat metodit
+     */
     @BeforeEach
     void showTestInfo(TestInfo testInfo) throws Exception {
-        
         System.out.println(testInfo.getDisplayName());
     }
-
+    
+    /**
+     * Testi, joka testaa uuden Degree-luokan luomisen sekä 
+     * attribuuttien tallentumisen.
+     */
     @Test
     @DisplayName("Testing initialization and get-methods")
     public void testInitandGetters() {
@@ -42,6 +48,10 @@ public class DegreeTest {
         assertEquals(testDegree.getStudyPoints(), points);
     }
     
+    /**
+     * Testi, joka testaa Degree-luokan moduulien ja opintosuuntien tallentumisen
+     * sekä tulostamisen.
+     */
     @Test
     @DisplayName("Testing addModule, getModules, addStudyField and getStudyFields")
     public void testModulesAndStudyFields() {
@@ -86,7 +96,10 @@ public class DegreeTest {
         
         
     }
-
+    
+    /**
+     * Testi, joka testaa Degree-luokan tilan tulostumisen.
+     */
     @Test
     @DisplayName("Testing toString")
     public void testToString() {
@@ -97,7 +110,12 @@ public class DegreeTest {
         String expResult = name;
         assertEquals(expResult, testDegree.toString());
     }
-
+    
+    
+    /**
+     * Testi, joka testaa valitun opintosuunnan tallentamisen sekä tulostamisen.
+     * @Param fields opintosuunnat
+     */
     @ParameterizedTest
     @MethodSource("fieldProvider")
     @DisplayName("Testing setSelectedField and getSelectedField")
@@ -116,6 +134,11 @@ public class DegreeTest {
         
         
     }
+    
+    /**
+     * Apumetodi, joka antaa opintosuuntia.
+     * @return opintosuuntia listassa
+     */
     public static Stream<List<Module>> fieldProvider() {
         TreeMap<String,Course> emptyCourses = new TreeMap<>();
         Module testField1 = new Module(emptyCourses,"studyfield-1","1",0);
