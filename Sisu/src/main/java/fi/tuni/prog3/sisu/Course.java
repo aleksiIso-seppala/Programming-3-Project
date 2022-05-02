@@ -72,13 +72,4 @@ public class Course implements Comparable<Course>{
     public String toString() {
         return this.name;
     }
-    
-    /**
-     * Vertailumetodi, joka vertailee kurssia nimen perusteella toiseen kurssiin.
-     * @return 0, jos kurssit ovat samoja. 1, jos kurssit eivät ole samoja.
-     */
-    @Override
-    public int compareTo(Course o) {
-        return name.compareTo(o.getName());
-    }
 }
