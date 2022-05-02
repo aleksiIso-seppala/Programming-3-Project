@@ -323,7 +323,7 @@ public class JSONHandler {
      * @return Palauttaa listan opiskelija-olioista.
      * @throws IOException 
      */
-    public static ArrayList<Student> readAllStudentData() throws IOException {
+    public static ArrayList<Student> readAllStudentData(TreeMap<String, Degree> degrees) throws IOException {
         
         Gson gson = new Gson();
         Reader reader = Files.newBufferedReader(Paths.get(STUDENT_FILE));
@@ -337,6 +337,7 @@ public class JSONHandler {
             String name = element.get("studentName").getAsString();
             String studentNumber  = element.get("studentNr").getAsString();
             
+            
             String startingYear = null;
             String finishingYear = null;
             if(element.get("startingYear") != null){
@@ -346,7 +347,24 @@ public class JSONHandler {
                 }
             }
             
-            Student student = new Student(name,studentNumber,startingYear,finishingYear);
+            Student student = new Student(name,studentNumber,startingYear,finishingYear);            
+            
+            
+            if(element.get("activeDegree") != null){
+                String activeDegree = element.get("activeDegree").getAsString();
+                Degree degree = degrees.get(activeDegree);
+                readDegree(degree);
+                student.setActiveDegree(degree);
+                
+                if(element.get("activeStudyField") != null){
+                    String activeStudyField = element.get("activeStudyField").getAsString();                    
+                    Module studyField = degree.getStudyFields().get(activeStudyField);                   
+                    student.setActiveStudyField(studyField);
+                } 
+            }
+            
+           
+
             
             JsonArray completions = element.getAsJsonArray("completions");
             for(var course : completions){
