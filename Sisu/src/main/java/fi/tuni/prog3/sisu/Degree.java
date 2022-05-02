@@ -99,26 +99,11 @@ public class Degree {
    }
    
    /**
-    * Lukee kaikki tutkinto-ohjelman alimoduulien kurssit ja lisää ne
-    * attribuuttiin allSubCourses.
+    * Lisää parametrina annetun kurssin allSubCourses TreeMappiin.
+    * @param course lisättävä kurssi
     */
    public void addToAllSubCourses(Course course) {
        this.allSubCourses.put(course.getName(), course);
-//        if (this.studyFields.isEmpty()) {
-//            for (var module : this.modules.entrySet()) {
-//                TreeMap<String, Course> courses = module.getValue().getCourses();
-//                System.out.println(courses);
-//                this.allSubCourses.putAll(courses);
-//            }
-//        }
-//        else {
-//            for (var field : this.studyFields.entrySet()) {
-//                TreeMap<String, Course> courses = field.getValue().getCourses();
-//                System.out.println(courses);
-//                this.allSubCourses.putAll(courses);
-//            }
-//        }
-//        System.out.println(this.allSubCourses);
     }
    
    /**
