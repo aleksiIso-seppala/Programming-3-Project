@@ -186,8 +186,8 @@ public class Student {
      * Poistaa parametrina annetun kurssin opiskelin suorituksista.
      * @param removedCourse poistettava kurssi Course-oliona
      */
-    public void removeCourse(Course removedCourse) {
-        this.completions.remove(removedCourse.getName());
+    public void removeCourse(String removedCourse) {
+        this.completions.remove(removedCourse);
     }
     
     /**
