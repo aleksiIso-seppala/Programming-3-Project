@@ -100,7 +100,7 @@ public class DegreeTest {
         String name = "Degree-A";
         String id = "1111";
         Degree testDegree = new Degree(points, name, id);
-        String expResult = name;
+        String expResult = name + " " + points + "op";
         assertEquals(expResult, testDegree.toString());
     }
     

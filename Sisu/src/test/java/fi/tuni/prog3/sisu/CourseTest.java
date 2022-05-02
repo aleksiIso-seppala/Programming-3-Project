@@ -52,6 +52,7 @@ public class CourseTest {
         String id = "AAA-1";
         int studyPoints = 5;
         Course testCourse = new Course(studyPoints, name, id);
-        assertEquals(name, testCourse.toString());
+        String expResult = name + " " + studyPoints + "op";
+        assertEquals(expResult, testCourse.toString());
     }
 }

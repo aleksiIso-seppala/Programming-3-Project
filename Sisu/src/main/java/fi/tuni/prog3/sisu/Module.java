@@ -143,7 +143,7 @@ public class Module {
         if(this.minCredits == -1) {
             return this.name;
         } else {
-            return this.name + " " + this.accCredits + "/" + this.minCredits + "op";
+            return this.name + " " + this.minCredits + "op";
         }
     }
     

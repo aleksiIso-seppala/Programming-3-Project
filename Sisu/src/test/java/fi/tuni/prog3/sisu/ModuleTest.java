@@ -134,7 +134,7 @@ public class ModuleTest {
         int credits = 180;
         Module testModule = new Module(emptyCourses, name, id, credits);
         testModule.setAccCredits(10);
-        String expResult = "Module-1 10/180";
+        String expResult = name + " " + credits + "op";
         assertEquals(expResult, testModule.toString());
     }
 }

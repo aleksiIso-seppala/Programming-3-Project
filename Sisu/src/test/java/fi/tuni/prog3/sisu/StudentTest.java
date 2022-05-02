@@ -176,7 +176,7 @@ public class StudentTest {
     @DisplayName("Testing toString")
     public void testToString() {
         Course c = new Course(5, "AAA", "001");
-        String expResult = "AAA";
+        String expResult = "AAA 5op";
         String result = c.toString();
         assertEquals(expResult, result);
     }
