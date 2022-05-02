@@ -30,7 +30,7 @@ public class JSONHandler {
         
         TreeMap<String, Degree> degrees = new TreeMap<>();
 
-        String sUrl = "https://sis-tuni-test.funidata.fi/kori/api/module-search?"
+        String sUrl = "https://sis-tuni.funidata.fi/kori/api/module-search?"
                 + "curriculumPeriodId=uta-lvv-2021&universityId=tuni-university"
                 + "-root-id&moduleType=DegreeProgramme&limit=1000";
         
@@ -67,7 +67,7 @@ public class JSONHandler {
     public static void readDegree(Degree selectedDegree) throws MalformedURLException, IOException{
         
         String groupId = selectedDegree.getId();
-        String mUrl = "https://sis-tuni-test.funidata.fi/kori/api/modules/"
+        String mUrl = "https://sis-tuni.funidata.fi/kori/api/modules/"
         + "by-group-id?groupId=" + groupId + 
         "&universityId=tuni-university-root-id";
         
@@ -147,7 +147,7 @@ public class JSONHandler {
      */
     public static Module readModule(String groupId) throws MalformedURLException, IOException{
         
-        String sUrl = "https://sis-tuni-test.funidata.fi/kori/api/modules/by-group-id?groupId="
+        String sUrl = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="
                 + groupId + "&universityId=tuni-university-root-id";
         URL url = new URL(sUrl);
         BufferedReader input = new BufferedReader (
@@ -249,7 +249,7 @@ public class JSONHandler {
      */
     public static Course readCourse(String courseId) throws MalformedURLException, IOException{
         
-        String sUrl = "https://sis-tuni-test.funidata.fi/kori/api/course-units/by-group-id?groupId="
+        String sUrl = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="
                 + courseId + "&universityId=tuni-university-root-id";
         URL url = new URL(sUrl);
         BufferedReader input = new BufferedReader (
